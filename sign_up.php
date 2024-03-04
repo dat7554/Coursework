@@ -82,11 +82,10 @@ if (isset($_POST['btn_submit'])) {
     }
 }
 
-//TODO:
+//TODO: connect close in sign_up
 //1. Forum page
 //2. Sign-in + session + count active user
-//3. connect close in sign_up
-//4. Setup the email to my mail for every user register
+//3. Setup the email to my mail for every user register
 
     //send email to confirm
     //$result = mail("SangDT12@fpt.edu.vn","My subject 111", 'Mail content here 222');
