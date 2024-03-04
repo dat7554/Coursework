@@ -85,7 +85,7 @@ if (isset($_POST['btn_submit'])) {
 //TODO:
 //1. Forum page
 //2. Sign-in + session + count active user
-//3. Sign-out
+//3. connect close in sign_up
 //4. Setup the email to my mail for every user register
 
     //send email to confirm
