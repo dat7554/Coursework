@@ -16,19 +16,19 @@ include_once('common_function.php');
         <td>Value</td>
     </tr>
     <tr>
-        <td>Email (*)</td>
+        <td>Email</td>
         <td><input type="email" name="txt_email"/></td>
     </tr>
     <tr>
-        <td>Username (*)</td>
+        <td>Username</td>
         <td><input type="text" name="txt_username"></td>
     </tr>
     <tr>
-        <td>Password (*)</td>
+        <td>Password</td>
         <td><input type="Password" name="txt_pass"/></td>
     </tr>
     <tr>
-        <td>Password Confirmation (*)</td>
+        <td>Password Confirmation</td>
         <td><input type="Password" name="txt_retype_pass"/></td>
     </tr>
     <tr>
