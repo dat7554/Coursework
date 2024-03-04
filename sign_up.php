@@ -66,7 +66,7 @@ if (isset($_POST['btn_submit'])) {
                 $statement->bindParam(':hashed_pass', $hashed_pass, PDO::PARAM_STR);
 
                 if ($statement->execute()) {
-                    echo "Account created successfully";
+                    echo "Account created successfully. Please <a href='sign_in.php'>sign in</a> to continue";
                 } else {
                     echo "Error: " . $sql . "<br>" . $statement->errorInfo()[2];
                 }
