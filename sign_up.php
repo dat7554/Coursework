@@ -20,7 +20,7 @@ include_once('common_function.php');
         <td><input type="email" name="txt_email"/></td>
     </tr>
     <tr>
-        <td>Username</td>
+        <td>Username (*)</td>
         <td><input type="text" name="txt_username"></td>
     </tr>
     <tr>
