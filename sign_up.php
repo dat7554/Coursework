@@ -35,6 +35,10 @@ include_once('common_function.php');
         <td></td>
         <td><input type="submit" value="Register" name="btn_submit"/></td>
     </tr>
+    <tr>
+        <td></td>
+        <td>Already has an account? <a href="sign_in.php">Sign in</a></td>
+    </tr>
 </table>
 </form>
 
