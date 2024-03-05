@@ -61,7 +61,6 @@ if (isset($_POST['btn_submit'])) {
                     //password matching
                 $hashed_pass = password_hash($pass, PASSWORD_DEFAULT);
 
-
                 $sql = "INSERT INTO user (email, username, password) VALUES (:email, :username, :hashed_pass)";
                 $statement = $pdo->prepare($sql);
 
@@ -88,7 +87,7 @@ if (isset($_POST['btn_submit'])) {
 
 //TODO: connect close in sign_up
 //1. Forum page
-//2. Sign-in + session + count active user
+//2. Session + count active user
 //3. Setup the email to my mail for every user register
 
     //send email to confirm
