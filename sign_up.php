@@ -1,4 +1,9 @@
 <?php
+//TODO: connect close in sign_up
+//1. Forum page
+//2. Session + count active user
+//3. Setup the email to my mail for every user register
+
 include_once('connection.php');
 include_once('common_function.php');
 ?>
@@ -9,7 +14,7 @@ include_once('common_function.php');
 </head>
 
 <body>
-<center><a href='index.php'>Home</a>
+<center><strong><a href='index.php'>Home</a></strong>
 <form method="post">
 <table cellpadding="10">
     <tr style="background:lightblue;">
@@ -85,12 +90,6 @@ if (isset($_POST['btn_submit'])) {
         echo 'Please fill in all the fields';
     }
 }
-
-//TODO: connect close in sign_up
-//1. Forum page
-//2. Session + count active user
-//3. Setup the email to my mail for every user register
-
     //send email to confirm
     //$result = mail("SangDT12@fpt.edu.vn","My subject 111", 'Mail content here 222');
     //var_dump($result);

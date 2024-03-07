@@ -1,4 +1,6 @@
 <?php
+//TODO: add personal information from database + add/change profile pic function + change pass + total posts
+
 session_start();
 include_once('connection.php');
 include_once('common_function.php');
@@ -9,7 +11,7 @@ if (@$_SESSION['email']) {
     <title>Forum</title>
 </head>
 <body>
-<a href="index.php">Home</a> | <a href="profile.php">Profile</a>
+<center><strong><a href="index.php">Home</a></strong></center>
 <?php
 
 ?>
@@ -17,10 +19,8 @@ if (@$_SESSION['email']) {
 </body>
 </html>
 <?php
-if (@$_GET['action']=='sign_out') {
+    if (@$_GET['action']=='sign_out') {
     session_destroy();
     header('location: index.php');
-}
-?>
-<?php
-}
+    }
+} else {header('location: index.php');}

@@ -1,4 +1,7 @@
 <?php
+//TODO: create session
+//TODO: repair to display line 59
+
 session_start();
 include_once('connection.php');
 include_once('common_function.php');
@@ -10,7 +13,7 @@ include_once('common_function.php');
 </head>
 
 <body>
-<center><a href='index.php'>Home</a>
+<center><strong><a href='index.php'>Home</a></strong>
 <form method="post">
     <table cellpadding="10">
         <tr style="background:lightblue;">
@@ -53,9 +56,8 @@ if (isset($_POST['btn_submit'])) {
         if ($statement->rowCount() > 0) {
             $hashed_pass = $statement->fetch()['password'];
             if (password_verify($pass,$hashed_pass)) {
-                echo "Successfully signed in as <strong>$email</strong>. Click <a href='index.php'>here</a> to the homepage"; //TODO: repair to display this line
+                echo "Successfully signed in as <strong>$email</strong>. Click <a href='index.php'>here</a> to the homepage";
 
-                //TODO: create session
                 // Create sessions so we know the user is logged in, they basically act like cookies but remember the data on the server.
                 //session_regenerate_id();
                 //$_SESSION['loggedin'] = true;
