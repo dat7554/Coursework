@@ -10,10 +10,11 @@ include_once('common_function.php');
 </head>
 
 <body>
+<center><a href='index.php'>Home</a>
 <form method="post">
     <table cellpadding="10">
         <tr style="background:lightblue;">
-            <td width="20%">Info</td>
+            <td width="45%">Info</td>
             <td>Value</td>
         </tr>
         <tr>
@@ -72,5 +73,6 @@ if (isset($_POST['btn_submit'])) {
     }
 }
 ?>
+</center>
 </body>
 </html>
