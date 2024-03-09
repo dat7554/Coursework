@@ -1,19 +1,14 @@
 <?php
-$host = 'localhost';
-$db = 'forum';
-$user = 'root';
-$password = '';
+//reference: https://www.phptutorial.net/php-pdo
+
+include_once('database/config.php');
 
 $dsn = "mysql:host=$host;dbname=$db;charset=UTF8";
 
 try {
     $pdo = new PDO($dsn, $user, $password);
-
-    if ($pdo) {
-        //echo "Connected to the $db database successfully!";
-    }
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    //echo "Connected to the $db database successfully!";
 } catch (PDOException $e) {
     echo $e->getMessage();
 }
-
-?>

@@ -1,19 +1,18 @@
 <?php
 //TODO: add captcha before submit button
 //TODO: create a header -- echo "<a style='text-decoration: none' href='profile.php?id=$id'><b>" . @$_SESSION['email'] . "</b></a>";
-//TODO: fix the image upload
 
 session_start();
 include_once('connection.php');
 include_once('common_function.php');
 if (@$_SESSION['email']) {
-    ?>
-    <html lang="en">
-    <head>
-        <title>Create a post</title>
-    </head>
-    <body>
-    <center><strong><a href="index.php">Home</a></strong> | <a href='index.php?action=sign_out'>Sign out</a>
+?>
+<html lang="en">
+<head>
+    <title>Create a post</title>
+</head>
+<body>
+<center><strong><a href="index.php">Home</a></strong> | <a href='index.php?action=sign_out'>Sign out</a>
     <form method="post" enctype="multipart/form-data"> <!-- as user upload file -->
         <table cellpadding="10">
             <tr style="background:lightblue;">
@@ -40,19 +39,26 @@ if (@$_SESSION['email']) {
             </tr>
         </table>
     </form>
-    </center>
-    </body>
-    </html>
-    <?php
-    if (isset($_POST['image'])) {
-        $extension = array('.png', '.jpeg', '.jpg');
+
+<?php
+if (isset($_POST['btn_submit'])) {
+    $title = $_POST['txt_title'];
+    $content = $_POST['textarea_content'];
+
+    if (isset($title) && isset($content)) {
+
+    }
+
+    if ($_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        $extension = array('png', 'jpeg', 'jpg');
         $file_name = basename($_FILES['image']['name']); // basename() may prevent filesystem traversal attacks
         $file_extension = strtolower(pathinfo($file_name,PATHINFO_EXTENSION));
         $file_size = $_FILES['image']['size'];
-        $file_tmp = $_FILES['image']['tmp'];
+        $file_tmp = $_FILES['image']['tmp_name'];
+
         $errors = array();
 
-        if (in_array($file_extension, $extension) === false) {
+        if (!in_array($file_extension, $extension)) {
             $errors[] = 'Please check the file extension';
         }
 
@@ -60,20 +66,26 @@ if (@$_SESSION['email']) {
             $errors[] = 'File must be under 5MB';
         }
 
-        if (empty($error)) {
-            move_uploaded_file($file_tmp, "images/post/$file_name");
-
+        if (empty($errors)) {
+            //move_uploaded_file($file_tmp, "images/post/$file_name");
+            echo "Post created successfully";
         } else {
             foreach ($errors as $error) {
                 echo $error;
             }
         }
+    } else {
+        echo "Error occurred during file upload";
     }
+}
 
-    //if (isset($_POST['btn_submit'])) {}
+if (@$_GET['action']=='sign_out') {
+    session_destroy();
+    header('location: index.php');
+}
 
-    if (@$_GET['action']=='sign_out') {
-        session_destroy();
-        header('location: index.php');
-    }
 } else {header('location: index.php');}
+?>
+</center>
+</body>
+</html>

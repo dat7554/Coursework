@@ -1,4 +1,6 @@
 <?php
+//TODO: add sql script because the user cannot load db from phpmyadmin (auto deleted) when receive the file
+
 session_start();
 include_once('connection.php');
 include_once('common_function.php');

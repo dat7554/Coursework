@@ -42,8 +42,8 @@ include_once('common_function.php');
 if (isset($_POST['btn_submit'])) {
     //user press "register" button
 
-    $email = trim($_POST['txt_email']);
-    $pass =trim($_POST['txt_pass']);
+    $email = $_POST['txt_email'];
+    $pass = $_POST['txt_pass'];
 
     if (isset($email) && isset($pass)) {
         $sql = 'SELECT password FROM user WHERE email = :email';
