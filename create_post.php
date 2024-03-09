@@ -1,4 +1,5 @@
 <?php
+//TODO: fix upload without image
 //TODO: add captcha before submit button
 //TODO: create a header -- echo "<a style='text-decoration: none' href='profile.php?id=$id'><b>" . @$_SESSION['email'] . "</b></a>";
 
@@ -46,36 +47,47 @@ if (isset($_POST['btn_submit'])) {
     $content = $_POST['textarea_content'];
 
     if (isset($title) && isset($content)) {
+        $sql = "INSERT INTO post (title, content, image) VALUES (:title, :content, :image)";
+        $statement = $pdo->prepare($sql);
 
-    }
+        $statement->bindParam(':title', $title, PDO::PARAM_STR);
+        $statement->bindParam(':content', $content, PDO::PARAM_STR);
 
-    if ($_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $extension = array('png', 'jpeg', 'jpg');
-        $file_name = basename($_FILES['image']['name']); // basename() may prevent filesystem traversal attacks
-        $file_extension = strtolower(pathinfo($file_name,PATHINFO_EXTENSION));
-        $file_size = $_FILES['image']['size'];
-        $file_tmp = $_FILES['image']['tmp_name'];
+        if ($_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            $extension = array('png', 'jpeg', 'jpg');
+            $file_name = basename($_FILES['image']['name']); // basename() may prevent filesystem traversal attacks
+            $file_extension = strtolower(pathinfo($file_name,PATHINFO_EXTENSION));
+            $file_size = $_FILES['image']['size'];
+            $file_tmp = $_FILES['image']['tmp_name'];
 
-        $errors = array();
+            $errors = array();
 
-        if (!in_array($file_extension, $extension)) {
-            $errors[] = 'Please check the file extension';
-        }
-
-        if ($file_size > 5242880) {
-            $errors[] = 'File must be under 5MB';
-        }
-
-        if (empty($errors)) {
-            //move_uploaded_file($file_tmp, "images/post/$file_name");
-            echo "Post created successfully";
-        } else {
-            foreach ($errors as $error) {
-                echo $error;
+            if (!in_array($file_extension, $extension)) {
+                $errors[] = 'Please check the file extension';
             }
+
+            if ($file_size > 5242880) {
+                $errors[] = 'File must be under 5MB';
+            }
+
+            if (empty($errors)) {
+                $image = 'images/post/'.$file_name;
+                $statement->bindParam(':image', $image, PDO::PARAM_STR);
+                move_uploaded_file($file_tmp, "images/post/$file_name");
+                echo "Image uploaded successfully";
+            } else {
+                foreach ($errors as $error) {
+                    echo $error;
+                }
+            }
+        } else {
+            echo "Error occurred during file upload";
         }
-    } else {
-        echo "Error occurred during file upload";
+        if ($statement->execute()) {
+            echo "Post created";
+        } else {
+            echo "Error: " . $sql . "<br>" . $statement->errorInfo()[2];
+        }
     }
 }
 

@@ -1,5 +1,6 @@
 <?php
 //TODO: connect close in sign_up
+//TODO: check existed username + email
 //1. Forum page
 //2. Session + count active user
 //3. Setup the email to my mail for every user register
