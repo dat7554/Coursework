@@ -1,5 +1,6 @@
 <?php
 //TODO: fix upload without image
+//TODO: keep input in fills if errors
 //TODO: add captcha before submit button
 //TODO: create a header -- echo "<a style='text-decoration: none' href='profile.php?id=$id'><b>" . @$_SESSION['email'] . "</b></a>";
 

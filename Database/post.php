@@ -9,6 +9,8 @@ try {
     postID INT AUTO_INCREMENT PRIMARY KEY,
     userID INT NOT NULL,
     moduleID INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content TEXT(1000) NOT NULL,
     image VARCHAR(255) NOT NULL,
     create_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     update_date DATETIME,
