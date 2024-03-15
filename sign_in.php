@@ -46,15 +46,17 @@ if (isset($_POST['btn_submit'])) {
     $pass = $_POST['txt_pass'];
 
     if (isset($email) && isset($pass)) {
-        $sql = 'SELECT password FROM user WHERE email = :email';
+        $sql = 'SELECT password, username FROM user WHERE email = :email';
 
         $statement = $pdo->prepare($sql);
         $statement->bindParam(':email', $email, PDO::PARAM_STR);
-
         $statement->execute();
 
         if ($statement->rowCount() > 0) {
-            $hashed_pass = $statement->fetch()['password'];
+            $row = $statement->fetch();
+            $hashed_pass = $row['password'];
+            $username = $row['username'];
+
             if (password_verify($pass,$hashed_pass)) {
                 echo "Successfully signed in as <strong>$email</strong>. Click <a href='index.php'>here</a> to the homepage";
 
@@ -62,6 +64,7 @@ if (isset($_POST['btn_submit'])) {
                 //session_regenerate_id();
                 //$_SESSION['loggedin'] = true;
                 $_SESSION['email'] = $email;
+                $_SESSION['username'] = $username;
                 header('location: index.php');
             } else {
                 echo 'Incorrect password';

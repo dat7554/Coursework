@@ -41,6 +41,8 @@ if (@$_SESSION['email']) { //check session
 </html>
 <?php
 $sql = "SELECT name, views, creator, create_date, update_date FROM module";
+$statement = $pdo->query($sql);
+$statement->execute();
 
 include_once('sign_out.php');
 ?>
