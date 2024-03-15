@@ -1,5 +1,4 @@
 <?php
-//TODO: fix upload without image
 //TODO: keep input in fills if errors
 //TODO: add captcha before submit button
 //TODO: create a header -- echo "<a style='text-decoration: none' href='profile.php?id=$id'><b>" . @$_SESSION['email'] . "</b></a>";
@@ -48,42 +47,56 @@ if (isset($_POST['btn_submit'])) {
     $content = $_POST['textarea_content'];
 
     if (isset($title) && isset($content)) {
+        //check if an image file has been uploaded
+        if (!empty($_FILES['image']['name'])) {
+            //handle image upload
+            if ($_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $extension = array('png', 'jpeg', 'jpg');
+                $file_name = basename($_FILES['image']['name']); //basename() may prevent filesystem traversal attacks
+                $file_extension = strtolower(pathinfo($file_name,PATHINFO_EXTENSION));
+                $file_size = $_FILES['image']['size'];
+                $file_tmp = $_FILES['image']['tmp_name'];
+
+                $errors = array();
+
+                //validate file extension
+                if (!in_array($file_extension, $extension)) {
+                    $errors[] = 'Please check the file extension';
+                }
+
+                //validate file size
+                if ($file_size > 5242880) {
+                    $errors[] = 'File must be under 5MB';
+                }
+
+                //move uploaded file to desired location
+                if (empty($errors)) {
+                    $image = 'images/post/'.$file_name;
+                    move_uploaded_file($file_tmp, "images/post/$file_name");
+                    echo "Image uploaded successfully";
+                } else {
+                    foreach ($errors as $error) {
+                        echo $error;
+                    }
+                }
+            } else {
+                echo "Error occurred during file upload";
+            }
+        } else {
+            //no image uploaded, set image parameter to NULL
+            $image = "";
+        }
+
+        //prepare sql statement
         $sql = "INSERT INTO post (title, content, image) VALUES (:title, :content, :image)";
         $statement = $pdo->prepare($sql);
 
+        //bind parameters
         $statement->bindParam(':title', $title, PDO::PARAM_STR);
         $statement->bindParam(':content', $content, PDO::PARAM_STR);
+        $statement->bindParam(':image', $image, PDO::PARAM_STR);
 
-        if ($_FILES['image']['error'] === UPLOAD_ERR_OK) {
-            $extension = array('png', 'jpeg', 'jpg');
-            $file_name = basename($_FILES['image']['name']); // basename() may prevent filesystem traversal attacks
-            $file_extension = strtolower(pathinfo($file_name,PATHINFO_EXTENSION));
-            $file_size = $_FILES['image']['size'];
-            $file_tmp = $_FILES['image']['tmp_name'];
-
-            $errors = array();
-
-            if (!in_array($file_extension, $extension)) {
-                $errors[] = 'Please check the file extension';
-            }
-
-            if ($file_size > 5242880) {
-                $errors[] = 'File must be under 5MB';
-            }
-
-            if (empty($errors)) {
-                $image = 'images/post/'.$file_name;
-                $statement->bindParam(':image', $image, PDO::PARAM_STR);
-                move_uploaded_file($file_tmp, "images/post/$file_name");
-                echo "Image uploaded successfully";
-            } else {
-                foreach ($errors as $error) {
-                    echo $error;
-                }
-            }
-        } else {
-            echo "Error occurred during file upload";
-        }
+        //execute statement
         if ($statement->execute()) {
             echo "Post created";
         } else {
@@ -92,10 +105,7 @@ if (isset($_POST['btn_submit'])) {
     }
 }
 
-if (@$_GET['action']=='sign_out') {
-    session_destroy();
-    header('location: index.php');
-}
+include_once('sign_out.php');
 
 } else {header('location: index.php');}
 ?>

@@ -10,6 +10,8 @@ try {
     $module_sql = "CREATE TABLE IF NOT EXISTS module (
     moduleID INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
+    views INT,
+    creator VARCHAR(255) NOT NULL,
     create_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     update_date DATETIME)";
 
@@ -73,8 +75,8 @@ try {
 
     //retrieve existing roles from the database
     $existing_roles = [];
-    $stmt = $pdo->query("SELECT role FROM user_role");
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $statement = $pdo->query("SELECT role FROM user_role");
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
         $existing_roles[] = $row['role'];
     }
 
