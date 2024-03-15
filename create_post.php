@@ -2,6 +2,7 @@
 //TODO: keep input in fills if errors
 //TODO: add captcha before submit button
 //TODO: create a header -- echo "<a style='text-decoration: none' href='profile.php?id=$id'><b>" . @$_SESSION['email'] . "</b></a>";
+//TODO: query userID to db as creator
 
 session_start();
 include_once('connection.php');
@@ -25,6 +26,25 @@ if (@$_SESSION['email']) {
                 <td><input type="text" name="txt_title"/></td>
             </tr>
             <tr>
+                <td>Module</td>
+                <td>
+                    <select name="moduleID">
+                        <?php
+                        //retrieve and display all modules in a dropdown menu
+                        $sql = "SELECT moduleID, name FROM module";
+                        $statement = $pdo->prepare($sql);
+
+                        //check if the query executed successfully
+                        if ($statement->execute()) {
+                            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                                echo "<option value='" . $row['moduleID'] . "'>" . $row['name'] . "</option>";
+                            }
+                        }
+                        ?>
+                    </select>
+                </td>
+            </tr>
+            <tr>
                 <td>Content</td>
                 <td><textarea style="resize: none;" name="textarea_content"></textarea></td>
             </tr>
@@ -43,10 +63,12 @@ if (@$_SESSION['email']) {
 
 <?php
 if (isset($_POST['btn_submit'])) {
+    //retrieve data from the form
     $title = $_POST['txt_title'];
     $content = $_POST['textarea_content'];
+    $moduleID = $_POST['moduleID'];
 
-    if (isset($title) && isset($content)) {
+    if (isset($title) && isset($content) && isset($moduleID)) {
         //check if an image file has been uploaded
         if (!empty($_FILES['image']['name'])) {
             //handle image upload
@@ -88,10 +110,11 @@ if (isset($_POST['btn_submit'])) {
         }
 
         //prepare sql statement
-        $sql = "INSERT INTO post (title, content, image) VALUES (:title, :content, :image)";
+        $sql = "INSERT INTO post (moduleID, title, content, image) VALUES (:moduleID, :title, :content, :image)";
         $statement = $pdo->prepare($sql);
 
         //bind parameters
+        $statement->bindParam(':moduleID', $moduleID, PDO::PARAM_INT);
         $statement->bindParam(':title', $title, PDO::PARAM_STR);
         $statement->bindParam(':content', $content, PDO::PARAM_STR);
         $statement->bindParam(':image', $image, PDO::PARAM_STR);

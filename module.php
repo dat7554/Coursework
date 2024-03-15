@@ -1,7 +1,6 @@
 <?php
-//TODO: add personal information from database + add/change profile pic function + change pass + total posts
 //TODO: header
-//TODO: profile display as user_id=$user_id
+//TODO: dynamic title
 
 session_start();
 include_once('connection.php');
@@ -10,7 +9,7 @@ if (@$_SESSION['email']) {
 ?>
 <html lang="en">
 <head>
-    <title><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : 'Profile'; ?></title>
+    <title><?php  ?></title>
 </head>
 <body>
 <center><strong><a href="index.php">Home</a></strong></center>
