@@ -1,6 +1,4 @@
 <?php
-//TODO: check function to make sure it is the admin who access this site
-//TODO: link to index when admin is logged in
 //TODO: add view count & add to database
 //TODO: keep input in fills if errors
 //TODO: add captcha before submit button
@@ -8,7 +6,17 @@
 session_start();
 include_once('connection.php');
 include_once('common_function.php');
+
 if (@$_SESSION['email']) {
+    //retrieve user role based on session email
+    $sql = "SELECT user_roleID FROM user WHERE email = :email";
+    $statement = $pdo->prepare($sql);
+    $statement->bindParam(':email', $_SESSION['email'] , PDO::PARAM_STR);
+    $statement->execute();
+    $userRole = $statement->fetch(PDO::FETCH_ASSOC);
+
+    //check if the user has the admin role
+    if ($userRole && $userRole['user_roleID'] == 1) {
 ?>
 <html lang="en">
 <head>
@@ -64,6 +72,7 @@ if (isset($_POST['btn_submit'])) {
 
 include_once('sign_out.php');
 
+    } else {header('location: index.php');}
 } else {header('location: index.php');}
 ?>
 </center>

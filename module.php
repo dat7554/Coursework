@@ -1,6 +1,7 @@
 <?php
 //TODO: header
 //TODO: dynamic title
+//TODO: editable module
 
 session_start();
 include_once('connection.php');
