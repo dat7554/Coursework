@@ -1,4 +1,6 @@
 <?php
+//TODO: htmlspecialchars
+
 session_start();
 include_once('connection.php');
 include_once('common_function.php');
@@ -33,7 +35,7 @@ if (@$_SESSION['email']) { //check session
 }
 
 //body
-$sql = "SELECT name, views, creator, create_date, update_date FROM module";
+$sql = "SELECT moduleID, name, views, creator, create_date, update_date FROM module";
 $statement = $pdo->prepare($sql);
 
 //check if the query executed successfully
@@ -51,7 +53,7 @@ if ($statement->execute()) {
     //loop through each row of the result set
     while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
         echo "<tr>
-                <td>{$row['name']}</td>
+                <td><a style='text-decoration: none' href='module.php?id={$row['moduleID']}'>{$row['name']}</a></td>
                 <td>{$row['views']}</td>
                 <td>{$row['creator']}</td>
                 <td>{$row['create_date']}</td>

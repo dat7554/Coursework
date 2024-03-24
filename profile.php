@@ -2,6 +2,7 @@
 //TODO: add personal information from database + add/change profile pic function + change pass + total posts
 //TODO: header
 //TODO: profile display as user_id=$user_id
+//TODO: htmlspecialchars
 
 session_start();
 include_once('connection.php');

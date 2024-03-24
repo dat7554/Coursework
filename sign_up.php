@@ -1,5 +1,6 @@
 <?php
 //TODO: connect close in sign_up
+//TODO: htmlspecialchars
 //TODO: check existed username + email
 //1. Forum page
 //2. Session + count active user

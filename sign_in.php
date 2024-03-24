@@ -1,6 +1,7 @@
 <?php
 //TODO: create session
 //TODO: repair to display line 59
+//TODO: htmlspecialchars
 
 session_start();
 include_once('connection.php');

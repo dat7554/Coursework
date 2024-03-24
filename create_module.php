@@ -2,6 +2,7 @@
 //TODO: add view count & add to database
 //TODO: keep input in fills if errors
 //TODO: add captcha before submit button
+//TODO: htmlspecialchars
 
 session_start();
 include_once('connection.php');

@@ -1,6 +1,7 @@
 <?php
 //module table
 //TODO: fix update_date
+//TODO: check creator, consider to change to userID fk or not
 
 include_once('config.php');
 include_once('../connection.php');
@@ -23,6 +24,7 @@ try {
 
 //post table
 //TODO: fix update_date
+//TODO: add update creator ID
 try {
     $post_sql = "CREATE TABLE IF NOT EXISTS post (
     postID INT AUTO_INCREMENT PRIMARY KEY,
@@ -31,6 +33,7 @@ try {
     title VARCHAR(255) NOT NULL,
     content TEXT(1000) NOT NULL,
     image VARCHAR(255) NOT NULL,
+    views INT,
     create_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     update_date DATETIME,
     FOREIGN KEY (userID) REFERENCES user(userID),
