@@ -48,6 +48,7 @@ if ($_GET['id']) {
         //loop through each row of the result set
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             echo "<h1>" . htmlspecialchars($row['title']) . "</h1>";
+            echo "<div>";
             echo "<table border='1px'>";
 
             //first row for content
@@ -57,19 +58,29 @@ if ($_GET['id']) {
 
             //second row for share link, edit, creator and dates
             echo "<tr>";
-            echo "<td><a>Share</a></td>";
-            echo "<td><table border='1px'><tr>";
-            if (empty($row['update_date'])) {
-                //echo "<tr><td>Updated " . htmlspecialchars($row['update_date']) . "</td></tr>";
-                echo "<td>Updated</td>";
+
+            //if session, able to edit
+            if (@$_SESSION['email']) {
+                echo "<td width='65%'><a>Share</a><a>Edit</a></td>";
+            } else {
+                echo "<td width='65%'><a>Share</a></td>";
             }
-            echo "<td>Asked " . htmlspecialchars($row['create_date']) . "</td></tr>";
+
+            echo "<td><table border='1' style='float: right'><tr>";
+            if (empty($row['update_date'])) { //missing "!" before empty
+                //echo "<tr><td>Updated " . htmlspecialchars($row['update_date']) . "</td></tr>";
+                echo "<td>Updated</td>"; //" . htmlspecialchars($row['update_userID']) . " between Update and </td>
+            } else {
+                echo "<td></td>";
+            }
+            echo "<td width='65%'>Asked " . htmlspecialchars($row['create_date']) . "</td></tr>";
             echo "<tr><td></td>";
             echo "<td>" . htmlspecialchars($row['userID']) . "</td></tr>";
             echo "</table></td>";
             echo "</tr>";
 
             echo "</table>";
+            echo "</div>";
         }
     } else {
         echo "Error: not found ";

@@ -14,10 +14,17 @@ createUserTable($pdo);
 //create user role table
 createUserRoleTable($pdo);
 
+//create answer table
+createAnswerTable($pdo);
+
+//create comment table
+createCommentTable($pdo);
+
 //function to create module table
 //TODO: fix update_date
 //TODO: check creator, consider to change to userID fk or not
-function createModuleTable($pdo) {
+function createModuleTable($pdo)
+{
     try {
         $module_sql = "CREATE TABLE IF NOT EXISTS module (
             moduleID INT AUTO_INCREMENT PRIMARY KEY,
@@ -39,11 +46,13 @@ function createModuleTable($pdo) {
 //function to create post table
 //TODO: fix update_date
 //TODO: add update creator ID
-function createPostTable($pdo) {
+function createPostTable($pdo)
+{
     try {
         $post_sql = "CREATE TABLE IF NOT EXISTS post (
             postID INT AUTO_INCREMENT PRIMARY KEY,
             userID INT NOT NULL,
+            update_userID INT,
             moduleID INT NOT NULL,
             title VARCHAR(255) NOT NULL,
             content TEXT(1000) NOT NULL,
@@ -65,7 +74,9 @@ function createPostTable($pdo) {
 
 //function to create user table
 //TODO: user_roleID currently fk in user, should consider user_roleID out of user (userID fk of user_role) or not ? later is easy to add new permission
-function createUserTable($pdo) {
+//TODO: auto add admin user to the db with roleID = 1
+function createUserTable($pdo)
+{
     try {
         $user_sql = "CREATE TABLE IF NOT EXISTS user (
             userID INT AUTO_INCREMENT PRIMARY KEY,
@@ -84,13 +95,27 @@ function createUserTable($pdo) {
         //execute the SQL statement to create the table
         $pdo->exec($user_sql);
         echo "User table created successfully!<br>";
+
+        //add admin user
+        $admin_email = "ndat7554@gmail.com";
+        $admin_username = "admin";
+        $admin_password = password_hash("123456789", PASSWORD_DEFAULT);
+
+        $admin_insert_sql = "INSERT INTO user (user_roleID, email, username, password, personal_description) VALUES (1, :email, :username, :password, 'Admin user')";
+
+        $admin_statement = $pdo->prepare($admin_insert_sql);
+        $admin_statement->bindParam(':email', $admin_email, PDO::PARAM_STR);
+        $admin_statement->bindParam(':username', $admin_username, PDO::PARAM_STR);
+        $admin_statement->bindParam(':password', $admin_password, PDO::PARAM_STR);
+        $admin_statement->execute();
     } catch (PDOException $e) {
         echo "Error creating user table: " . $e->getMessage();
     }
 }
 
 //function to create user role table
-function createUserRoleTable($pdo) {
+function createUserRoleTable($pdo)
+{
     try {
         $user_role_sql = "CREATE TABLE IF NOT EXISTS user_role (
             user_roleID INT AUTO_INCREMENT PRIMARY KEY,
@@ -128,3 +153,46 @@ function createUserRoleTable($pdo) {
     }
 }
 
+function createAnswerTable($pdo)
+{
+    try {
+        $answer_sql = "CREATE TABLE IF NOT EXISTS answer (
+            answerID INT AUTO_INCREMENT PRIMARY KEY,
+            postID INT NOT NULL,
+            userID INT NOT NULL,
+            content TEXT NOT NULL,
+            create_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+            update_date DATETIME ON UPDATE CURRENT_TIMESTAMP,
+            FOREIGN KEY (postID) REFERENCES post(postID),
+            FOREIGN KEY (userID) REFERENCES user(userID)
+        );";
+
+        //execute the SQL statement to create the table
+        $pdo->exec($answer_sql);
+        echo "Answer table created successfully!<br>";
+    } catch (PDOException $e) {
+        echo "Error creating user table: " . $e->getMessage();
+    }
+}
+
+function createCommentTable($pdo)
+{
+    try {
+        $comment_sql = "CREATE TABLE IF NOT EXISTS comment (
+            commentID INT AUTO_INCREMENT PRIMARY KEY,
+            answerID INT NOT NULL,
+            userID INT NOT NULL,
+            content TEXT NOT NULL,
+            create_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+            update_date DATETIME ON UPDATE CURRENT_TIMESTAMP,
+            FOREIGN KEY (answerID) REFERENCES answer(answerID),
+            FOREIGN KEY (userID) REFERENCES user(userID)
+        );";
+
+        //execute the SQL statement to create the table
+        $pdo->exec($comment_sql);
+        echo "Comment table created successfully!<br>";
+    } catch (PDOException $e) {
+        echo "Error creating user table: " . $e->getMessage();
+    }
+}

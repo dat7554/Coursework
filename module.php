@@ -20,8 +20,9 @@ include_once('common_function.php');
 <center><strong><a href="index.php">Home</a></strong>
 
 <?php
-$sql = "SELECT postID, userID, moduleID, title, content, image, views, create_date, update_date FROM post";
+$sql = "SELECT * FROM post WHERE moduleID = :moduleID";
 $statement = $pdo->prepare($sql);
+$statement->bindParam(':moduleID', $_GET['id'], PDO::PARAM_STR);
 
 //check if the query executed successfully
 if ($statement->execute()) {
