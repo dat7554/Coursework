@@ -3,6 +3,7 @@
 //TODO: keep input in fills if errors
 //TODO: add captcha before submit button
 //TODO: htmlspecialchars
+//TODO: consider to change the creator to userID
 
 session_start();
 include_once('connection.php');

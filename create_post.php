@@ -110,11 +110,21 @@ if (isset($_POST['btn_submit'])) {
             $image = "";
         }
 
+        //query to retrieve userID based on email
+        $user_email = $_SESSION['email'];
+        $user_sql = "SELECT userID FROM user WHERE email = :email";
+        $statement_user = $pdo->prepare($user_sql);
+        $statement_user->bindParam(':email', $user_email, PDO::PARAM_STR);
+        $statement_user->execute();
+        $row = $statement_user->fetch(PDO::FETCH_ASSOC);
+        $userID = $row['userID'];
+
         //prepare sql statement
-        $sql = "INSERT INTO post (moduleID, title, content, image) VALUES (:moduleID, :title, :content, :image)";
+        $sql = "INSERT INTO post (userID, moduleID, title, content, image) VALUES (:userID, :moduleID, :title, :content, :image)";
         $statement = $pdo->prepare($sql);
 
         //bind parameters
+        $statement->bindParam(':userID', $userID, PDO::PARAM_INT);
         $statement->bindParam(':moduleID', $moduleID, PDO::PARAM_INT);
         $statement->bindParam(':title', $title, PDO::PARAM_STR);
         $statement->bindParam(':content', $content, PDO::PARAM_STR);

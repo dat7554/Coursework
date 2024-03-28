@@ -1,8 +1,7 @@
 <?php
-//TODO: add update creator
-//TODO: add create creator
 //TODO: add share function
-//TODO: add edit function for logged in user
+//TODO: add image
+//TODO: add edit+delete function for logged in user
 //TODO: add comment section
 
 session_start();
@@ -40,7 +39,11 @@ if (@$_SESSION['email']) { //check session
 
 //body
 if ($_GET['id']) {
-    $sql = "SELECT * FROM post WHERE postID = :postID";
+    $sql = "SELECT p.*, u.username AS create_username, u2.username AS update_username 
+            FROM post p 
+            LEFT JOIN user u ON p.userID = u.userID 
+            LEFT JOIN user u2 ON p.update_userID = u2.userID 
+            WHERE p.postID = :postID";
     $statement = $pdo->prepare($sql);
     $statement->bindParam(':postID', $_GET['id'], PDO::PARAM_STR);
 
@@ -68,14 +71,14 @@ if ($_GET['id']) {
 
             echo "<td><table border='1' style='float: right'><tr>";
             if (empty($row['update_date'])) { //missing "!" before empty
-                //echo "<tr><td>Updated " . htmlspecialchars($row['update_date']) . "</td></tr>";
-                echo "<td>Updated</td>"; //" . htmlspecialchars($row['update_userID']) . " between Update and </td>
+                echo "<td>Updated</td>"; //" . htmlspecialchars($row['update_date']) . "
+                //echo "<td>" . htmlspecialchars($row['update_username']) . "</td></tr>";
             } else {
                 echo "<td></td>";
             }
             echo "<td width='65%'>Asked " . htmlspecialchars($row['create_date']) . "</td></tr>";
             echo "<tr><td></td>";
-            echo "<td>" . htmlspecialchars($row['userID']) . "</td></tr>";
+            echo "<td>" . htmlspecialchars($row['create_username']) . "</td></tr>";
             echo "</table></td>";
             echo "</tr>";
 

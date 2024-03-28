@@ -20,7 +20,10 @@ include_once('common_function.php');
 <center><strong><a href="index.php">Home</a></strong>
 
 <?php
-$sql = "SELECT * FROM post WHERE moduleID = :moduleID";
+$sql = "SELECT p.*, u.username
+        FROM post p 
+        LEFT JOIN user u ON p.userID = u.userID 
+        WHERE p.moduleID = :moduleID";
 $statement = $pdo->prepare($sql);
 $statement->bindParam(':moduleID', $_GET['id'], PDO::PARAM_STR);
 
@@ -41,7 +44,7 @@ if ($statement->execute()) {
         echo "<tr>
                 <td><a style='text-decoration: none' href='post.php?id={$row['postID']}'>{$row['title']}</a></td>
                 <td>{$row['views']}</td>
-                <td>{$row['userID']}</td>
+                <td>{$row['username']}</td>
                 <td>{$row['create_date']}</td>
                 <td>{$row['update_date']}</td>
               </tr>";
