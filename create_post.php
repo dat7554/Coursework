@@ -4,6 +4,7 @@
 //TODO: create a header -- echo "<a style='text-decoration: none' href='profile.php?id=$id'><b>" . @$_SESSION['email'] . "</b></a>";
 //TODO: query userID to db as creator
 //TODO: htmlspecialchars
+//TODO: edit the size of content textarea
 
 session_start();
 include_once('connection.php');

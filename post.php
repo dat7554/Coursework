@@ -1,7 +1,7 @@
 <?php
 //TODO: add share function
 //TODO: add image
-//TODO: add edit+delete function for logged in user
+//TODO: add edit+delete function for admin
 //TODO: add comment section
 
 session_start();
@@ -63,20 +63,20 @@ if ($_GET['id']) {
             echo "<tr>";
 
             //if session, able to edit
-            if (@$_SESSION['email']) {
-                echo "<td width='65%'><a>Share</a><a>Edit</a></td>";
+            if (@$_SESSION['email'] && $row['userID'] == $user['userID']) {
+                echo "<td width='65%'><a>Share</a> <a href='edit_post.php?id={$row['postID']}'>Edit</a> <a href='delete_post.php?id={$row['postID']}'>Delete</a></td>";
             } else {
                 echo "<td width='65%'><a>Share</a></td>";
             }
 
-            echo "<td><table border='1' style='float: right'><tr>";
-            if (empty($row['update_date'])) { //missing "!" before empty
-                echo "<td>Updated</td>"; //" . htmlspecialchars($row['update_date']) . "
+            echo "<td><table style='float: right' cellspacing='10'><tr>";
+            if (!empty($row['update_date'])) {
+                echo "<td>Updated " . htmlspecialchars($row['update_date']) . "</td>";
                 //echo "<td>" . htmlspecialchars($row['update_username']) . "</td></tr>";
             } else {
                 echo "<td></td>";
             }
-            echo "<td width='65%'>Asked " . htmlspecialchars($row['create_date']) . "</td></tr>";
+            echo "<td>Asked " . htmlspecialchars($row['create_date']) . "</td></tr>";
             echo "<tr><td></td>";
             echo "<td>" . htmlspecialchars($row['create_username']) . "</td></tr>";
             echo "</table></td>";

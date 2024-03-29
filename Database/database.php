@@ -97,6 +97,7 @@ function createUserTable($pdo)
         echo "User table created successfully!<br>";
 
         //add admin user
+        //TODO: check if admin account existed
         $admin_email = "ndat7554@gmail.com";
         $admin_username = "admin";
         $admin_password = password_hash("123456789", PASSWORD_DEFAULT);
