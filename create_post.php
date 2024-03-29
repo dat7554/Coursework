@@ -34,13 +34,14 @@ if (@$_SESSION['email']) {
                         <?php
                         //retrieve and display all modules in a dropdown menu
                         $sql = "SELECT moduleID, name FROM module";
-                        $statement = $pdo->prepare($sql);
+                        $statement = $pdo->query($sql);
 
-                        //check if the query executed successfully
-                        if ($statement->execute()) {
+                        if ($statement) {
                             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                                 echo "<option value='" . $row['moduleID'] . "'>" . $row['name'] . "</option>";
                             }
+                        } else {
+                            echo "Error fetching modules.";
                         }
                         ?>
                     </select>

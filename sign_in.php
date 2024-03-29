@@ -47,7 +47,7 @@ if (isset($_POST['btn_submit'])) {
     $pass = $_POST['txt_pass'];
 
     if (isset($email) && isset($pass)) {
-        $sql = 'SELECT password, username, userID FROM user WHERE email = :email';
+        $sql = 'SELECT password, username, userID, user_roleID FROM user WHERE email = :email';
 
         $statement = $pdo->prepare($sql);
         $statement->bindParam(':email', $email, PDO::PARAM_STR);
@@ -58,6 +58,7 @@ if (isset($_POST['btn_submit'])) {
             $hashed_pass = $row['password'];
             $username = $row['username'];
             $userID = $row['userID'];
+            $user_roleID = $row['user_roleID'];
 
             if (password_verify($pass,$hashed_pass)) {
                 echo "Successfully signed in as <strong>$email</strong>. Click <a href='index.php'>here</a> to the homepage";
@@ -68,6 +69,7 @@ if (isset($_POST['btn_submit'])) {
                 $_SESSION['email'] = $email;
                 $_SESSION['username'] = $username;
                 $_SESSION['userID'] = $userID;
+                $_SESSION['user_roleID'] = $user_roleID;
                 header('location: index.php');
             } else {
                 echo 'Incorrect password';

@@ -27,8 +27,8 @@ $statement->bindParam('postID', $postID, PDO::PARAM_INT);
 $statement->execute();
 $post = $statement->fetch(PDO::FETCH_ASSOC);
 
-//check if post existed and user is the post creator
-if (!$post or $post['userID'] != $_SESSION['userID']) {
+//check if post existed and user is the post creator or admin
+if (!$post or ($post['userID'] != $_SESSION['userID'] && $_SESSION['user_roleID'] != 1)) {
     header('location: index.php');
     exit();
 }
@@ -38,14 +38,16 @@ if (isset($_POST['btn_submit'])) {
     $title = $_POST['txt_title'];
     $content = $_POST['textarea_content'];
     $moduleID = $_POST['moduleID'];
+    $update_userID = ($post['userID'] != $_SESSION['userID']) ? $_SESSION['userID'] : null; //if user is the post creator, no need to display the username again
 
     //update post in database
-    $sql = "UPDATE post SET title = :title, content = :content, moduleID = :moduleID, update_date = NOW() WHERE postID = :postID";
+    $sql = "UPDATE post SET update_userID = :update_userID, title = :title, content = :content, moduleID = :moduleID, update_date = NOW() WHERE postID = :postID";
     $statement = $pdo->prepare($sql);
     $statement->bindParam('title', $title, PDO::PARAM_STR);
     $statement->bindParam('content', $content, PDO::PARAM_STR);
     $statement->bindParam('moduleID', $moduleID, PDO::PARAM_INT);
     $statement->bindParam('postID', $postID, PDO::PARAM_INT);
+    $statement->bindParam(':update_userID', $update_userID, PDO::PARAM_INT);
 
     if ($statement->execute()) {
         echo "Updated successfully";
@@ -93,12 +95,17 @@ if (isset($_POST['btn_submit'])) {
             </tr>
             <tr>
                 <td>Content</td>
-                <td><textarea style="resize: none;" name="textarea_content"><?php echo htmlspecialchars($post['content']); ?></textarea></td>
+                <td><textarea style="resize: none;" name="textarea_content"><?php echo htmlspecialchars($post['content']);?></textarea></td>
             </tr>
+            <?php
+            if ($post['image']) {
+                echo "
             <tr>
                 <td>Current Image</td>
-                <td><img alt="current image in the post" src='<?php echo $post['image'];?>' width="50%"></td>
-            </tr>
+                <td><img alt='current image in the post' src='" . $post['image'] . "' width='50%'></td>
+            </tr>";
+            }
+            ?>
             <tr>
                 <td>Upload image <br>(<b>.png</b>, <b>.jpeg</b>, <b>.jpg</b>)</td>
                 <td>

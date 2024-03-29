@@ -1,7 +1,6 @@
 <?php
 //TODO: add share function
 //TODO: add image
-//TODO: add edit+delete function for admin
 //TODO: add comment section
 
 session_start();
@@ -18,20 +17,12 @@ include_once('common_function.php');
 <?php
 //header
 if (@$_SESSION['email']) { //check session
-    $email = $_SESSION['email'];
-    $sql = "SELECT userID, user_roleID FROM user WHERE email = :email";
-    $statement = $pdo->prepare($sql);
-    $statement->bindParam(':email', $email, PDO::PARAM_STR);
-    $statement->execute();
-    $user = $statement->fetch();
-
     echo "<strong><a href='index.php'>Home</a> | <a href='create_post.php'>Create a post</a></strong>";
-
-    if ($user['user_roleID'] == 1) {
+    if ($_SESSION['user_roleID'] == 1) {
         echo "<strong> | <a href='create_module.php'>Create a module</a></strong>";
     }
 
-    echo "<p>Welcome, <a style='text-decoration: none' href='profile.php?user_id={$user['userID']}'><b>" . @$_SESSION['email'] . "</b></a> | <a href='index.php?action=sign_out'>Sign out</a></p>";
+    echo "<p>Welcome, <a style='text-decoration: none' href='profile.php?user_id={$_SESSION['userID']}'><b>" . @$_SESSION['email'] . "</b></a> | <a href='index.php?action=sign_out'>Sign out</a></p>";
 
 } else { //header public view
     echo "<strong><a href='index.php'>Home</a> | <a href='sign_in.php'>Sign in</a> | <a href='sign_up.php'>Sign up</a></strong>";
@@ -63,24 +54,31 @@ if ($_GET['id']) {
             echo "<tr>";
 
             //if session, able to edit
-            if (@$_SESSION['email'] && $row['userID'] == $user['userID']) {
+            if (@$_SESSION['email'] && ($row['userID'] == $_SESSION['userID'] or $_SESSION['user_roleID'] == 1)) {
                 echo "<td width='65%'><a>Share</a> <a href='edit_post.php?id={$row['postID']}'>Edit</a> <a href='delete_post.php?id={$row['postID']}'>Delete</a></td>";
             } else {
                 echo "<td width='65%'><a>Share</a></td>";
             }
 
             echo "<td><table style='float: right' cellspacing='10'><tr>";
-            if (!empty($row['update_date'])) {
+            echo "<tr>";
+
+            if ($row['update_date']) {
                 echo "<td>Updated " . htmlspecialchars($row['update_date']) . "</td>";
-                //echo "<td>" . htmlspecialchars($row['update_username']) . "</td></tr>";
             } else {
                 echo "<td></td>";
             }
+
             echo "<td>Asked " . htmlspecialchars($row['create_date']) . "</td></tr>";
-            echo "<tr><td></td>";
+            echo "<tr>";
+
+            if ($row['update_date'] && $row['update_userID'] != null) {
+                echo "<td>" . htmlspecialchars($row['update_username']) . "</td>";
+            } else {
+                echo "<td></td>";
+            }
+
             echo "<td>" . htmlspecialchars($row['create_username']) . "</td></tr>";
-            echo "</table></td>";
-            echo "</tr>";
 
             echo "</table>";
             echo "</div>";

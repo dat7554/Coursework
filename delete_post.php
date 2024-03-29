@@ -25,8 +25,8 @@ $statement->bindParam(':postID', $postID, PDO::PARAM_INT);
 $statement->execute();
 $post = $statement->fetch(PDO::FETCH_ASSOC);
 
-//check if post existed and user is the post creator
-if (!$post or $post['userID'] != $_SESSION['userID']) {
+//check if post existed and user is the post creator or admin
+if (!$post or ($post['userID'] != $_SESSION['userID'] && $_SESSION['user_roleID'] != 1)) {
     header('location: index.php');
     exit();
 }
