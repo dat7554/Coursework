@@ -1,4 +1,6 @@
 <?php
+//TODO: logical delete - not display on web, still in db
+
 session_start();
 include_once('connection.php');
 include_once('common_function.php');

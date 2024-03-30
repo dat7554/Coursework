@@ -9,7 +9,7 @@ session_start();
 include_once('connection.php');
 include_once('common_function.php');
 
-if (@$_SESSION['email']) {
+if (isset($_SESSION['email'])) {
     //retrieve user role based on session email
     $sql = "SELECT user_roleID FROM user WHERE email = :email";
     $statement = $pdo->prepare($sql);
@@ -25,7 +25,11 @@ if (@$_SESSION['email']) {
     <title>Create a module</title>
 </head>
 <body>
-<center><strong><a href="index.php">Home</a></strong> | <a href='index.php?action=sign_out'>Sign out</a>
+<center>
+<?php
+//header
+include('header.php');
+?>
     <form method="post">
         <table cellpadding="10">
             <tr style="background:lightblue;">

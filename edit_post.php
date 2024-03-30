@@ -1,12 +1,15 @@
 <?php
-//TODO: edit the size of content textarea
+//TODO: delete image
+//TODO: keep input in fills if errors
+//TODO: fix the logic when upload error & edit content/title -> still display upload error + update success & change content/title; edit a 2nd module -> change to default module as module 1
+
 
 session_start();
 include_once('connection.php');
 include_once('common_function.php');
 
 //check user
-if (!$_SESSION['email']) {
+if (!isset($_SESSION['email'])) {
     header('location: index.php');
     exit();
 }
@@ -32,37 +35,19 @@ if (!$post or ($post['userID'] != $_SESSION['userID'] && $_SESSION['user_roleID'
     header('location: index.php');
     exit();
 }
-
-//check if the form is submitted to edit the post
-if (isset($_POST['btn_submit'])) {
-    $title = $_POST['txt_title'];
-    $content = $_POST['textarea_content'];
-    $moduleID = $_POST['moduleID'];
-    $update_userID = ($post['userID'] != $_SESSION['userID']) ? $_SESSION['userID'] : null; //if user is the post creator, no need to display the username again
-
-    //update post in database
-    $sql = "UPDATE post SET update_userID = :update_userID, title = :title, content = :content, moduleID = :moduleID, update_date = NOW() WHERE postID = :postID";
-    $statement = $pdo->prepare($sql);
-    $statement->bindParam('title', $title, PDO::PARAM_STR);
-    $statement->bindParam('content', $content, PDO::PARAM_STR);
-    $statement->bindParam('moduleID', $moduleID, PDO::PARAM_INT);
-    $statement->bindParam('postID', $postID, PDO::PARAM_INT);
-    $statement->bindParam(':update_userID', $update_userID, PDO::PARAM_INT);
-
-    if ($statement->execute()) {
-        echo "Updated successfully";
-    } else {
-        echo "Error updating the post.";
-    }
-}
 ?>
-
 <html lang="en">
 <head>
     <title>Edit post</title>
 </head>
 <body>
-<center><strong><a href="index.php">Home</a></strong> | <a href='index.php?action=sign_out'>Sign out</a>
+<center>
+
+<?php
+//header
+include('header.php');
+?>
+
     <form method="post" enctype="multipart/form-data"> <!-- as user upload file -->
         <table cellpadding="10">
             <tr style="background:lightblue;">
@@ -95,7 +80,7 @@ if (isset($_POST['btn_submit'])) {
             </tr>
             <tr>
                 <td>Content</td>
-                <td><textarea style="resize: none;" name="textarea_content"><?php echo htmlspecialchars($post['content']);?></textarea></td>
+                <td><textarea style="resize: none; width: 100%; height: 150px" name="textarea_content"><?php echo htmlspecialchars($post['content']);?></textarea></td>
             </tr>
             <?php
             if ($post['image']) {
@@ -118,5 +103,88 @@ if (isset($_POST['btn_submit'])) {
             </tr>
         </table>
     </form>
+
+    <?php //check if the form is submitted to edit the post
+    if (isset($_POST['btn_submit'])) {
+        $title = $_POST['txt_title'];
+        $content = $_POST['textarea_content'];
+        $moduleID = $_POST['moduleID'];
+        $update_userID = ($post['userID'] != $_SESSION['userID']) ? $_SESSION['userID'] : null; //if user is the post creator, no need to display the username again
+
+        if (isset($title, $content, $moduleID)) {
+            //check if any of the required fields are empty
+            if (empty($title) or empty($content) or empty($moduleID)) {
+                echo "Please fill in all required fields";
+            } else {
+                $sql = "UPDATE post SET update_userID = :update_userID, title = :title, content = :content, moduleID = :moduleID, update_date = NOW()";
+
+                //check if an image file has been uploaded
+                if (!empty($_FILES['image']['name'])) {
+                    //handle image upload
+                    if ($_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                        $extension = array('png', 'jpeg', 'jpg');
+                        $file_name = basename($_FILES['image']['name']); //basename() may prevent filesystem traversal attacks
+                        $file_extension = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+                        $file_size = $_FILES['image']['size'];
+                        $file_tmp = $_FILES['image']['tmp_name'];
+
+                        $errors = array();
+
+                        //validate file extension
+                        if (!in_array($file_extension, $extension)) {
+                            $errors[] = 'Please check the file extension';
+                        }
+
+                        //validate file size
+                        if ($file_size > 5242880) {
+                            $errors[] = 'File must be under 5MB';
+                        }
+
+                        //move uploaded file to desired location
+                        if (empty($errors)) {
+                            $image = 'images/post/' . $file_name;
+                            if (move_uploaded_file($file_tmp, "images/post/$file_name")) {
+                                $sql .= ", image = :image";
+                                $success_msg = "Image uploaded successfully";
+                            } else {
+                                $success_msg = "Error occurred while moving the uploaded file";
+                            }
+                        } else {
+                            foreach ($errors as $error) {
+                                echo $error . "<br>";
+                            }
+                        }
+                    } else {
+                        echo "Error occurred during file upload";
+                    }
+                }
+
+                //update post in database
+                $sql .= " WHERE postID = :postID";
+                $statement = $pdo->prepare($sql);
+                $statement->bindParam('title', $title, PDO::PARAM_STR);
+                $statement->bindParam('content', $content, PDO::PARAM_STR);
+                $statement->bindParam('moduleID', $moduleID, PDO::PARAM_INT);
+                $statement->bindParam('postID', $postID, PDO::PARAM_INT);
+                $statement->bindParam(':update_userID', $update_userID, PDO::PARAM_INT);
+
+                //bind image param only if image uploaded successfully
+                if (!empty($image)) {
+                    $statement->bindParam(':image', $image, PDO::PARAM_STR);
+                }
+
+                if ($statement->execute()) {
+                    echo "Updated successfully<br>";
+                    if (isset($success_message)) {
+                        echo $success_message;
+                    }
+                } else {
+                    echo "Error: " . $sql . "<br>" . $statement->errorInfo()[2];
+                }
+            }
+        }
+    }
+    ?>
+</center>
 </body>
 </html>

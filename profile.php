@@ -14,13 +14,14 @@ if (@$_SESSION['email']) {
     <title><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : 'Profile'; ?></title>
 </head>
 <body>
-<center><strong><a href="index.php">Home</a></strong></center>
+<center>
 <?php
+//header
+include('header.php');
 
+//body
 ?>
-
 </body>
 </html>
 <?php
-include_once('sign_out.php');
 } else {header('location: index.php');}

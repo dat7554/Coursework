@@ -17,9 +17,12 @@ include_once('common_function.php');
         ?></title>
 </head>
 <body>
-<center><strong><a href="index.php">Home</a></strong>
-
+<center>
 <?php
+//header
+include('header.php');
+
+//body
 $sql = "SELECT p.*, u.username
         FROM post p 
         LEFT JOIN user u ON p.userID = u.userID 
@@ -58,7 +61,3 @@ if ($statement->execute()) {
 </center>
 </body>
 </html>
-<?php
-if (@$_SESSION['email']) {
-include_once('sign_out.php');
-}

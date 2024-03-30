@@ -16,17 +16,7 @@ include_once('common_function.php');
 <center>
 <?php
 //header
-if (@$_SESSION['email']) { //check session
-    echo "<strong><a href='index.php'>Home</a> | <a href='create_post.php'>Create a post</a></strong>";
-    if ($_SESSION['user_roleID'] == 1) {
-        echo "<strong> | <a href='create_module.php'>Create a module</a></strong>";
-    }
-
-    echo "<p>Welcome, <a style='text-decoration: none' href='profile.php?user_id={$_SESSION['userID']}'><b>" . @$_SESSION['email'] . "</b></a> | <a href='index.php?action=sign_out'>Sign out</a></p>";
-
-} else { //header public view
-    echo "<strong><a href='index.php'>Home</a> | <a href='sign_in.php'>Sign in</a> | <a href='sign_up.php'>Sign up</a></strong>";
-}
+include('header.php');
 
 //body
 if ($_GET['id']) {
@@ -43,12 +33,16 @@ if ($_GET['id']) {
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             echo "<h1>" . htmlspecialchars($row['title']) . "</h1>";
             echo "<div>";
-            echo "<table border='1px'>";
+            echo "<table>";
 
             //first row for content
             echo "<tr>";
-            echo "<td width='900px' colspan='2'>" . htmlspecialchars($row['content']) . "</td>";
-            echo "</tr>";
+            echo "<td style='border: 1px solid black; padding: 20px;' width='900px' colspan='2'>" . htmlspecialchars($row['content']);
+
+            if (!empty($row['image'])) {
+                echo "<br><img style='padding: 20px' alt='image' src='" . $row['image'] . "' width='50%'>";
+            }
+            echo "</td></tr>";
 
             //second row for share link, edit, creator and dates
             echo "<tr>";
@@ -60,7 +54,7 @@ if ($_GET['id']) {
                 echo "<td width='65%'><a>Share</a></td>";
             }
 
-            echo "<td><table style='float: right' cellspacing='10'><tr>";
+            echo "<td><table style='float: right' cellspacing='10' cellpadding='5'><tr>";
             echo "<tr>";
 
             if ($row['update_date']) {
@@ -89,8 +83,6 @@ if ($_GET['id']) {
 } else {
     header('location: index.php');
 }
-
-include_once('sign_out.php');
 ?>
 </center>
 </body>
