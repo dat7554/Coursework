@@ -106,6 +106,7 @@ include('header.php');
 
     <?php //check if the form is submitted to edit the post
     if (isset($_POST['btn_submit'])) {
+        //retrieve data from the form
         $title = $_POST['txt_title'];
         $content = $_POST['textarea_content'];
         $moduleID = $_POST['moduleID'];
@@ -115,11 +116,13 @@ include('header.php');
             //check if any of the required fields are empty
             if (empty($title) or empty($content) or empty($moduleID)) {
                 echo "Please fill in all required fields";
+                exit();
             } else {
                 $sql = "UPDATE post SET update_userID = :update_userID, title = :title, content = :content, moduleID = :moduleID, update_date = NOW()";
 
                 //check if an image file has been uploaded
                 if (!empty($_FILES['image']['name'])) {
+
                     //handle image upload
                     if ($_FILES['image']['error'] === UPLOAD_ERR_OK) {
                         $extension = array('png', 'jpeg', 'jpg');
@@ -127,7 +130,6 @@ include('header.php');
                         $file_extension = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
                         $file_size = $_FILES['image']['size'];
                         $file_tmp = $_FILES['image']['tmp_name'];
-
                         $errors = array();
 
                         //validate file extension
@@ -136,26 +138,29 @@ include('header.php');
                         }
 
                         //validate file size
-                        if ($file_size > 5242880) {
+                        $max_file_size = 5242880; // 5MB
+                        if ($file_size > $max_file_size) {
                             $errors[] = 'File must be under 5MB';
                         }
 
                         //move uploaded file to desired location
-                        if (empty($errors)) {
-                            $image = 'images/post/' . $file_name;
-                            if (move_uploaded_file($file_tmp, "images/post/$file_name")) {
-                                $sql .= ", image = :image";
-                                $success_msg = "Image uploaded successfully";
-                            } else {
-                                $success_msg = "Error occurred while moving the uploaded file";
-                            }
-                        } else {
+                        if (!empty($errors)) {
                             foreach ($errors as $error) {
-                                echo $error . "<br>";
+                                echo $error;
                             }
+                            exit();
                         }
+
+                        $image = 'images/post/' . $file_name;
+                        if (!move_uploaded_file($file_tmp, "images/post/$file_name")) {
+                            echo "Error occurred while moving the uploaded file";
+                            exit();
+                        }
+                        $sql .= ", image = :image";
+                        echo "Image uploaded successfully <br>";
                     } else {
                         echo "Error occurred during file upload";
+                        exit();
                     }
                 }
 
@@ -175,9 +180,6 @@ include('header.php');
 
                 if ($statement->execute()) {
                     echo "Updated successfully<br>";
-                    if (isset($success_message)) {
-                        echo $success_message;
-                    }
                 } else {
                     echo "Error: " . $sql . "<br>" . $statement->errorInfo()[2];
                 }
