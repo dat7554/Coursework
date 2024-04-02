@@ -56,7 +56,7 @@ function createPostTable($pdo)
             moduleID INT NOT NULL,
             title VARCHAR(255) NOT NULL,
             content TEXT(1000) NOT NULL,
-            image VARCHAR(255) NOT NULL,
+            image VARCHAR(255),
             views INT,
             create_date DATETIME DEFAULT CURRENT_TIMESTAMP,
             update_date DATETIME ON UPDATE CURRENT_TIMESTAMP,
@@ -94,21 +94,29 @@ function createUserTable($pdo)
 
         //execute the SQL statement to create the table
         $pdo->exec($user_sql);
-        echo "User table created successfully!<br>";
+        echo "User table created successfully!";
 
-        //add admin user
-        //TODO: check if admin account existed
-        $admin_email = "ndat7554@gmail.com";
-        $admin_username = "admin";
-        $admin_password = password_hash("123456789", PASSWORD_DEFAULT);
+        //check if admin account exists
+        $admin_exists = $pdo->query("SELECT userID FROM user WHERE user_roleID = 1 LIMIT 1")->rowCount() > 0;
 
-        $admin_insert_sql = "INSERT INTO user (user_roleID, email, username, password, personal_description) VALUES (1, :email, :username, :password, 'Admin user')";
+        if (!$admin_exists) {
+            //add admin user
+            $admin_email = "ndat7554@gmail.com";
+            $admin_username = "admin";
+            $admin_password = password_hash("123456789", PASSWORD_DEFAULT);
 
-        $admin_statement = $pdo->prepare($admin_insert_sql);
-        $admin_statement->bindParam(':email', $admin_email, PDO::PARAM_STR);
-        $admin_statement->bindParam(':username', $admin_username, PDO::PARAM_STR);
-        $admin_statement->bindParam(':password', $admin_password, PDO::PARAM_STR);
-        $admin_statement->execute();
+            $admin_insert_sql = "INSERT INTO user (user_roleID, email, username, password, personal_description) VALUES (1, :email, :username, :password, 'Admin')";
+            $admin_statement = $pdo->prepare($admin_insert_sql);
+            $admin_statement->execute([
+                ':email' => $admin_email,
+                ':username' => $admin_username,
+                ':password' => $admin_password
+            ]);
+
+            echo " Admin account created successfully.<br>";
+        } else {
+            echo " Admin account already exists.<br>";
+        }
     } catch (PDOException $e) {
         echo "Error creating user table: " . $e->getMessage();
     }
