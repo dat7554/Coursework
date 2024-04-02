@@ -9,16 +9,10 @@ session_start();
 include_once('connection.php');
 include_once('common_function.php');
 
-if (isset($_SESSION['email'])) {
-    //retrieve user role based on session email
-    $sql = "SELECT user_roleID FROM user WHERE email = :email";
-    $statement = $pdo->prepare($sql);
-    $statement->bindParam(':email', $_SESSION['email'] , PDO::PARAM_STR);
-    $statement->execute();
-    $userRole = $statement->fetch(PDO::FETCH_ASSOC);
-
-    //check if the user has the admin role
-    if ($userRole && $userRole['user_roleID'] == 1) {
+if (!$_SESSION['user_roleID'] == 1) {
+    header('location: index.php');
+    exit();
+}
 ?>
 <html lang="en">
 <head>
@@ -77,9 +71,6 @@ if (isset($_POST['btn_submit'])) {
 }
 
 include_once('sign_out.php');
-
-    } else {header('location: index.php');}
-} else {header('location: index.php');}
 ?>
 </center>
 </body>
