@@ -10,7 +10,7 @@ if (!$_SESSION['user_roleID'] == 1) {
 ?>
 <html lang="en">
 <head>
-    <title>Accounts</title>
+    <title>User accounts</title>
 </head>
 <body>
 <center>
@@ -46,9 +46,14 @@ if ($statement = $pdo->query($sql)) {
                 <td>{$row['personal_description']}</td>
                 <td>{$row['register_date']}</td>
                 <td>{$row['update_date']}</td>
-                <td style='text-align: center'><a>Edit</a></td>
-                <td style='text-align: center'><a>Delete</a></td>
-              </tr>";
+                <td style='text-align: center' href='edit_user.php?id={$row['userID']}'><a>Edit</a></td>";
+
+        //check admin row, not to display delete
+        if (!$row['user_roleID'] == 1) {
+            echo "<td style='text-align: center'><a>Delete</a></td>";
+        }
+
+        echo "</tr>";
     }
     echo "</table>"; //close the HTML table
 } else {
