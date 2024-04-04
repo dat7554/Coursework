@@ -1,4 +1,6 @@
 <?php
+//TODO: display role
+
 session_start();
 include_once('connection.php');
 include_once('common_function.php');
@@ -36,24 +38,32 @@ if ($statement = $pdo->query($sql)) {
                 <td width='100px' style='text-align: center'></td>
             </tr>";
 
+    //initialize index counter
+    $index = 1;
+
     //loop through each row of the result set
     while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
         echo "<tr>
-                <td style='text-align: center'>n</td>
+                <td style='text-align: center'>{$index}</td>
                 <td style='text-align: center'>role</td>
                 <td>{$row['email']}</td>
                 <td>{$row['username']}</td>
                 <td>{$row['personal_description']}</td>
                 <td>{$row['register_date']}</td>
                 <td>{$row['update_date']}</td>
-                <td style='text-align: center' href='edit_user.php?id={$row['userID']}'><a>Edit</a></td>";
+                <td style='text-align: center'><a href='edit_account.php?id={$row['userID']}'>Edit</a></td>";
 
         //check admin row, not to display delete
         if (!$row['user_roleID'] == 1) {
             echo "<td style='text-align: center'><a>Delete</a></td>";
+        } else {
+            echo "<td style='text-align: center'>-</td>";
         }
 
         echo "</tr>";
+
+        //increment index counter
+        $index++;
     }
     echo "</table>"; //close the HTML table
 } else {

@@ -1,8 +1,6 @@
 <?php
 //TODO: delete image
 //TODO: keep input in fills if errors
-//TODO: fix the logic when upload error & edit content/title -> still display upload error + update success & change content/title; edit a 2nd module -> change to default module as module 1
-
 
 session_start();
 include_once('connection.php');
