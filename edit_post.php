@@ -67,7 +67,14 @@ include('header.php');
 
                         if ($statement) {
                             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-                                echo "<option value='" . $row['moduleID'] . "'>" . $row['name'] . "</option>";
+                                echo "<option value='" . $row['moduleID'] . "' ";
+
+                                //display current module as default
+                                if ($row['moduleID'] == $post['moduleID']) {
+                                    echo "selected = 'selected'";
+                                }
+
+                                echo ">" . $row['name'] . "</option>";
                             }
                         } else {
                             echo "Error fetching modules.";
@@ -165,10 +172,10 @@ include('header.php');
                 //update post in database
                 $sql .= " WHERE postID = :postID";
                 $statement = $pdo->prepare($sql);
-                $statement->bindParam('title', $title, PDO::PARAM_STR);
-                $statement->bindParam('content', $content, PDO::PARAM_STR);
-                $statement->bindParam('moduleID', $moduleID, PDO::PARAM_INT);
-                $statement->bindParam('postID', $postID, PDO::PARAM_INT);
+                $statement->bindParam(':title', $title, PDO::PARAM_STR);
+                $statement->bindParam(':content', $content, PDO::PARAM_STR);
+                $statement->bindParam(':moduleID', $moduleID, PDO::PARAM_INT);
+                $statement->bindParam(':postID', $postID, PDO::PARAM_INT);
                 $statement->bindParam(':update_userID', $update_userID, PDO::PARAM_INT);
 
                 //bind image param only if image uploaded successfully

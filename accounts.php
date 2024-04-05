@@ -54,7 +54,7 @@ if ($statement = $pdo->query($sql)) {
                 <td style='text-align: center'><a href='edit_account.php?id={$row['userID']}'>Edit</a></td>";
 
         //check admin row, not to display delete
-        if (!$row['user_roleID'] == 1) {
+        if ($row['user_roleID'] != 1) {
             echo "<td style='text-align: center'><a>Delete</a></td>";
         } else {
             echo "<td style='text-align: center'>-</td>";
