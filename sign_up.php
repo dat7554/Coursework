@@ -92,10 +92,6 @@ if (isset($_POST['btn_submit'])) {
         echo 'Please fill in all the fields';
     }
 }
-    //send email to confirm
-    //$result = mail("SangDT12@fpt.edu.vn","My subject 111", 'Mail content here 222');
-    //var_dump($result);
-
 ?>
 </center>
 </body>

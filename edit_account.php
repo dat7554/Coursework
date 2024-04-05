@@ -2,6 +2,7 @@
 //TODO: change info-value layout
 //TODO: add avatar function to edit_account.php, database.php
 //TODO: change pass (if possible)
+//TODO: check form enctype necessary
 
 session_start();
 include_once('connection.php');

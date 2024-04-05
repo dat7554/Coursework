@@ -48,6 +48,7 @@ if ($statement->execute()) {
     echo "Error: " . $sql . "<br>" . $statement->errorInfo()[2];
 }
 
+include('mail.php');
 include_once('sign_out.php');
 ?>
 </center>
