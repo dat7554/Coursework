@@ -1,7 +1,6 @@
 <?php
 //TODO: connect close in sign_up
 //TODO: htmlspecialchars
-//TODO: check existed username + email
 //1. Forum page
 //2. Session + count active user
 //3. Setup the email to my mail for every user register
@@ -62,6 +61,22 @@ if (isset($_POST['btn_submit'])) {
     //check valid input for email, username, password, password confirmation
     if (!empty($username) && !empty($email) && (!empty($pass)) && (!empty($retyped_pass))) {
 
+        $sql = "SELECT email, username FROM user WHERE email = :email OR username = :username";
+        $statement = $pdo->prepare($sql);
+        $statement->bindParam(':email', $email, PDO::PARAM_STR);
+        $statement->bindParam(':username', $username, PDO::PARAM_STR);
+        $statement->execute();
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if ($row > 0) {
+            if ($row['username'] == $username) {
+                echo "Username is already in used";
+            } elseif ($row['email'] == $email) {
+                echo "Email is already in used";
+            }
+            exit();
+        }
+
         //password must be greater than 5
         if (strlen($pass) > 5) {
 
@@ -71,7 +86,6 @@ if (isset($_POST['btn_submit'])) {
 
                 $sql = "INSERT INTO user (email, username, password) VALUES (:email, :username, :hashed_pass)";
                 $statement = $pdo->prepare($sql);
-
                 $statement->bindParam(':email', $email, PDO::PARAM_STR);
                 $statement->bindParam(':username', $username, PDO::PARAM_STR);
                 $statement->bindParam(':hashed_pass', $hashed_pass, PDO::PARAM_STR);
