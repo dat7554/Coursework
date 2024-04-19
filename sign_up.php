@@ -1,4 +1,6 @@
 <?php
+//code adapted from: https://developers.google.com/recaptcha/docs/display
+
 //TODO: connect close in sign_up
 //TODO: htmlspecialchars
 //1. Forum page
@@ -12,6 +14,7 @@ include_once('common_function.php');
 <html>
 <head>
     <title>Sign up</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 
 <body>
@@ -39,12 +42,21 @@ include_once('common_function.php');
         <td><input type="Password" name="txt_retype_pass"/></td>
     </tr>
     <tr>
+        <td>Captcha</td>
+        <td>
+            <div class="g-recaptcha" data-sitekey="6LdBMsApAAAAABk6TFZvZBVqqLXWk2oPNB9dhQmp"></div>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>By signing up, you agree our <a href="#">Terms</a> and <a href="#">Data Policy</a>.</td>
+    </tr>
+    <tr>
         <td></td>
         <td><input type="submit" value="Register" name="btn_submit"/></td>
     </tr>
     <tr>
-        <td></td>
-        <td>Already has an account? <a href="sign_in.php">Sign in</a></td>
+        <td colspan="2">Already has an account? <a href="sign_in.php">Sign in</a></td>
     </tr>
 </table>
 </form>
@@ -60,6 +72,20 @@ if (isset($_POST['btn_submit'])) {
 
     //check valid input for email, username, password, password confirmation
     if (!empty($username) && !empty($email) && (!empty($pass)) && (!empty($retyped_pass))) {
+
+        if (empty($_POST['g-recaptcha-response'])) {
+            echo "Please solve reCAPTCHA";
+            exit();
+        }
+
+        $privatekey = "6LdBMsApAAAAACNif4mU4A3NgX-ZveRn1aM6jH_K";
+        $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=" . $privatekey . "&response=" . $_POST['g-recaptcha-response']);
+        $data = json_decode($response);
+
+        if (!$data->success) {
+            echo "Please try again";
+            exit();
+        }
 
         $sql = "SELECT email, username FROM user WHERE email = :email OR username = :username";
         $statement = $pdo->prepare($sql);
