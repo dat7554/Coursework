@@ -21,7 +21,10 @@ include_once('common_function.php');
 </head>
 
 <body>
-<center><strong><a href='index.php'>Home</a></strong>
+<?php //header
+include('header.php');
+?>
+
 <form method="post">
 <table cellpadding="10">
     <tr style="background:lightblue;">
@@ -136,8 +139,6 @@ if (isset($_POST['btn_submit'])) {
     }
 }
 ?>
-</center>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
 </body>
-
 </html>

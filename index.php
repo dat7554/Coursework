@@ -1,6 +1,4 @@
 <?php
-//TODO: htmlspecialchars
-
 session_start();
 include_once('connection.php');
 include_once('common_function.php');
@@ -26,28 +24,35 @@ $statement = $pdo->prepare($sql);
 
 //check if the query executed successfully
 if ($statement->execute()) {
-    //fetch and display the results in HTML table
-    echo "<table border='1px'>
-            <tr>
-                <td width='500px' style='text-align: center'>Module</td>
-                <td width='100px' style='text-align: center'>Views</td>
-                <td width='100px' style='text-align: center'>Creator</td>
-                <td width='100px' style='text-align: center'>Date created</td>
-                <td width='100px' style='text-align: center'>Date updated</td>
-            </tr>";
+    //fetch and display the results in HTML table ?>
 
-    //loop through each row of the result set
-    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-        echo "<tr>
-                <td><a style='text-decoration: none' href='module.php?id={$row['moduleID']}'>{$row['name']}</a></td>
-                <td>{$row['views']}</td>
-                <td>{$row['username']}</td>
-                <td>{$row['create_date']}</td>
-                <td>{$row['update_date']}</td>
-              </tr>";
-    }
-    echo "</table>"; //close the HTML table
-} else {
+<div class="container my-3">
+    <div class="jumbotron">
+        <h1 class="display-3">Threads category</h1>
+        <table class="table">
+            <thead class="table-dark">
+            <tr>
+                <th class="col-5" scope="col">Module</th>
+                <th scope="col">Creator</th>
+                <th scope="col">Date created</th>
+                <th scope="col">Date updated</th>
+            </tr>
+            </thead>
+            <tbody class="table-group-divider">
+            <?php //loop through each row of the result set
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) { ?>
+                <tr>
+                    <th scope="row"><a href='module.php?id=<?php echo htmlspecialchars($row['moduleID'])?>'><?php echo htmlspecialchars($row['name'])?></a></th>
+                    <td><?php echo htmlspecialchars($row['username'])?></td>
+                    <td><?php echo $row['create_date']?></td>
+                    <td><?php echo $row['update_date']?></td>
+                </tr>
+            <?php }?>
+            </tbody>
+        </table>
+    </div>
+</div>
+<?php } else {
     //handle the case where the query fails
     echo "Error: " . $sql . "<br>" . $statement->errorInfo()[2];
 }
