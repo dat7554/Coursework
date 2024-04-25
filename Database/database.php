@@ -17,12 +17,8 @@ createUserRoleTable($pdo);
 //create answer table
 createAnswerTable($pdo);
 
-//create comment table
-createCommentTable($pdo);
 
 //function to create module table
-//TODO: fix update_date
-//TODO: check creator, consider to change to userID fk or not
 function createModuleTable($pdo)
 {
     try {
@@ -30,7 +26,7 @@ function createModuleTable($pdo)
             moduleID INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
             views INT,
-            creator VARCHAR(255) NOT NULL,
+            userID INT NOT NULL,
             create_date DATETIME DEFAULT CURRENT_TIMESTAMP,
             update_date DATETIME ON UPDATE CURRENT_TIMESTAMP
         )";
@@ -44,8 +40,6 @@ function createModuleTable($pdo)
 }
 
 //function to create post table
-//TODO: fix update_date
-//TODO: add update creator ID
 function createPostTable($pdo)
 {
     try {
@@ -73,8 +67,6 @@ function createPostTable($pdo)
 }
 
 //function to create user table
-//TODO: user_roleID currently fk in user, should consider user_roleID out of user (userID fk of user_role) or not ? later is easy to add new permission
-//TODO: auto add admin user to the db with roleID = 1
 function createUserTable($pdo)
 {
     try {
@@ -169,6 +161,7 @@ function createAnswerTable($pdo)
             answerID INT AUTO_INCREMENT PRIMARY KEY,
             postID INT NOT NULL,
             userID INT NOT NULL,
+            update_userID INT,
             content TEXT NOT NULL,
             create_date DATETIME DEFAULT CURRENT_TIMESTAMP,
             update_date DATETIME ON UPDATE CURRENT_TIMESTAMP,
@@ -179,28 +172,6 @@ function createAnswerTable($pdo)
         //execute the SQL statement to create the table
         $pdo->exec($answer_sql);
         echo "Answer table created successfully!<br>";
-    } catch (PDOException $e) {
-        echo "Error creating user table: " . $e->getMessage();
-    }
-}
-
-function createCommentTable($pdo)
-{
-    try {
-        $comment_sql = "CREATE TABLE IF NOT EXISTS comment (
-            commentID INT AUTO_INCREMENT PRIMARY KEY,
-            answerID INT NOT NULL,
-            userID INT NOT NULL,
-            content TEXT NOT NULL,
-            create_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-            update_date DATETIME ON UPDATE CURRENT_TIMESTAMP,
-            FOREIGN KEY (answerID) REFERENCES answer(answerID),
-            FOREIGN KEY (userID) REFERENCES user(userID)
-        );";
-
-        //execute the SQL statement to create the table
-        $pdo->exec($comment_sql);
-        echo "Comment table created successfully!<br>";
     } catch (PDOException $e) {
         echo "Error creating user table: " . $e->getMessage();
     }
