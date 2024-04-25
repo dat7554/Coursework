@@ -1,10 +1,4 @@
 <?php
-//TODO: add view count & add to database
-//TODO: keep input in fills if errors
-//TODO: add captcha before submit button
-//TODO: htmlspecialchars
-//TODO: consider to change the creator to userID
-
 session_start();
 include_once('connection.php');
 include_once('common_function.php');
@@ -22,27 +16,18 @@ if (!$_SESSION['user_roleID'] == 1) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
-<center>
 <?php
 //header
 include('header.php');
 ?>
+
+<div class="container my-3" style="width: 50%;">
     <form method="post">
-        <table cellpadding="10">
-            <tr style="background:lightblue;">
-                <td width="25%"></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Module name</td>
-                <td><input type="text" name="txt_name"/></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><input type="submit" value="Create the module" name="btn_submit"/></td>
-            </tr>
-        </table>
+        <label for="inputModuleName" class="form-label">Module Name</label>
+        <input type="text" name="txt_name" id="inputModuleName" class="form-control">
+        <input style="margin-top: 15px" type="submit" value="Create the module" name="btn_submit"/>
     </form>
+</div>
 
 <?php
 if (isset($_POST['btn_submit'])) {
@@ -75,7 +60,6 @@ if (isset($_POST['btn_submit'])) {
 
 include_once('sign_out.php');
 ?>
-</center>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
 </body>
 </html>

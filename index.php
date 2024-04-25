@@ -28,8 +28,8 @@ if ($statement->execute()) {
 
 <div class="container my-3">
     <div class="jumbotron">
-        <h1 class="display-3">Threads category</h1>
-        <table class="table">
+        <h1>Threads category</h1>
+        <table class="table align-middle">
             <thead class="table-dark">
             <tr>
                 <th class="col-5" scope="col">Module</th>
@@ -43,7 +43,7 @@ if ($statement->execute()) {
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) { ?>
                 <tr>
                     <th scope="row"><a href='module.php?id=<?php echo htmlspecialchars($row['moduleID'])?>'><?php echo htmlspecialchars($row['name'])?></a></th>
-                    <td><?php echo htmlspecialchars($row['username'])?></td>
+                    <td><img src="images/profile/user.jpg" height="55px" alt="user profile image"><?php echo htmlspecialchars($row['username'])?></td>
                     <td><?php echo $row['create_date']?></td>
                     <td><?php echo $row['update_date']?></td>
                 </tr>

@@ -11,10 +11,10 @@ include_once('common_function.php');
     <title>Post</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
-<center>
 <?php
 //header
 
@@ -24,8 +24,9 @@ include('post_answer.php');
 
 //body
 if ($_GET['id']) {
-    $sql = "SELECT p.*, u.username AS create_username, u2.username AS update_username 
+    $sql = "SELECT p.*, m.name, u.username AS create_username, u2.username AS update_username 
             FROM post p 
+            LEFT JOIN module m ON p.moduleID = m.moduleID
             LEFT JOIN user u ON p.userID = u.userID 
             LEFT JOIN user u2 ON p.update_userID = u2.userID 
             WHERE p.postID = :postID";
@@ -36,127 +37,120 @@ if ($_GET['id']) {
         $row = $statement->fetch(PDO::FETCH_ASSOC); ?>
 
         <!-- Post section -->
-        </center>
-        <div class='post-container'>
-            <table>
-                <tr>
-                    <td colspan="2"><h1><?php echo htmlspecialchars($row['title']); ?></h1></td>
-                </tr>
-                <tr>
-                    <td style="border: 1px solid black; padding: 20px;" colspan="2">
-                        <?php echo htmlspecialchars($row['content']); ?>
-                        <?php if (!empty($row['image'])) {
-                            echo "<br><img style='padding: 20px' alt='image uploaded by the creator' src=".$row['image']." width='50%'>";
-                        } ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td width="65%">
-                        <?php if (@$_SESSION['email'] && ($row['userID'] == $_SESSION['userID'] or $_SESSION['user_roleID'] == 1)) {
-                            echo "<a>Share</a> <a href='edit_post.php?id=".$row['postID']."'>Edit</a> <a href='delete_post.php?id=".$row['postID']."'>Delete</a>";
-                        } else {
-                            echo "<a>Share</a>";
-                        } ?>
-                    </td>
-                    <td>
-                        <table style="float: right" cellspacing="10" cellpadding="5">
-                            <tr>
-                                <?php if ($row['update_date']) {
-                                    echo "<td>Updated ".htmlspecialchars($row['update_date'])."</td>";
-                                } else {
-                                    echo "<td></td>";
-                                } ?>
-                                <td>Asked <?php echo htmlspecialchars($row['create_date']); ?></td>
-                            </tr>
-                            <tr>
-                                <?php if ($row['update_date'] && $row['update_userID'] != null) {
-                                    echo "<td>".htmlspecialchars($row['update_username'])."</td>";
-                                } else {
-                                    echo "<td></td>";
-                                } ?>
-                                <td><?php echo htmlspecialchars($row['create_username']); ?></td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
+        <div class='container my-3'>
+            <div class="jumbo">
+                <h1 class="display-3"><?php echo htmlspecialchars($row['title']); ?></h1>
+                <p class="lead">Module: <?php echo $row['name']?></p>
+                <hr class="my-3">
+                <p>
+                    <?php echo htmlspecialchars($row['content']);
+                    if (!empty($row['image'])) {
+                        echo "<br><img style='padding: 20px' alt='image uploaded by the creator' src=".$row['image']." width='50%'>";
+                    } ?>
+                </p>
+                <table width="100%">
+                    <tr>
+                        <td class="custom">
+                            <?php if (@$_SESSION['email'] && ($row['userID'] == $_SESSION['userID'] or $_SESSION['user_roleID'] == 1)) {
+                                echo "<a>Share</a> <a href='edit_post.php?id=".$row['postID']."'>Edit</a> <a href='delete_post.php?id=".$row['postID']."'>Delete</a>";
+                            } else {
+                                echo "<a>Share</a>";
+                            } ?>
+                        </td>
+                        <td>
+                            <table cellpadding="5%" class="to_right">
+                                <tr class="custom">
+                                    <?php if ($row['update_date']) {
+                                        echo "<td>Updated ".$row['update_date']."</td>";
+                                    } else {
+                                        echo "<td></td>";
+                                    } ?>
+                                    <td>Asked <?php echo $row['create_date']; ?></td>
+                                </tr>
+                                <tr class="custom">
+                                    <?php if ($row['update_date'] && $row['update_userID'] != null) {
+                                        echo "<td><img src='images/profile/user.jpg' height='55px' alt='user profile image'>".htmlspecialchars($row['update_username'])."</td>";
+                                    } else {
+                                        echo "<td></td>";
+                                    } ?>
+                                    <td><img src='images/profile/user.jpg' height='55px' alt='user profile image'><?php echo htmlspecialchars($row['create_username']); ?></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
 
         <!-- Answer section -->
-            <?php
-            $answer_sql = "SELECT a.*, u.username AS answer_username, u2.username AS update_username 
+        <?php
+        $answer_sql = "SELECT a.*, u.username AS answer_username, u2.username AS update_username 
                     FROM answer a 
                     LEFT JOIN user u ON a.userID = u.userID 
                     LEFT JOIN user u2 ON a.update_userID = u2.userID 
                     WHERE a.postID = :postID";
-            $answer_statement = $pdo->prepare($answer_sql);
-            $answer_statement->bindParam(':postID', $_GET['id'], PDO::PARAM_STR);
+        $answer_statement = $pdo->prepare($answer_sql);
+        $answer_statement->bindParam(':postID', $_GET['id'], PDO::PARAM_STR);
 
-            if ($answer_statement->execute()) {
-                if ($answer_statement->rowCount() > 0) {
-                    echo "<div class='post-container'>
-                    <h2>Answers</h2>";
-                    while ($answer_row = $answer_statement->fetch(PDO::FETCH_ASSOC)) {?>
-                        <table style="border-bottom: 1px solid #d9d9d9; padding: 20px;">
-                            <tr>
-                                <td style="padding: 20px;" width="900px" colspan="2"><?php echo htmlspecialchars($answer_row['content']);?></td>
-                            </tr>
-                            <tr>
-                                <td width="65%">
-                                    <?php if (@$_SESSION['email'] && ($answer_row['userID'] == $_SESSION['userID'] or $_SESSION['user_roleID'] == 1)) {
-                                        echo "<a>Share</a> <a>Edit</a> <a>Delete</a>"; //edit: href='edit_answer.php?id=".$answer_row['answerID']."'
-                                    } else {
-                                        echo "<a>Share</a>";
-                                    } ?>
-                                </td>
-                                <td>
-                                    <table style="float: right" cellspacing="10" cellpadding="5">
-                                        <tr>
-                                            <?php if ($answer_row['update_date']) {
-                                                echo "<td>Updated ".htmlspecialchars($answer_row['update_date'])."</td>";
+        if ($answer_statement->execute()) {
+            if ($answer_statement->rowCount() > 0) {?>
+                <div class='container my-sm-3'>
+                    <div class="jumbo">
+                        <h3 class="display-6">Answers</h3>
+                        <?php while ($answer_row = $answer_statement->fetch(PDO::FETCH_ASSOC)) {?>
+                            <p><?php echo htmlspecialchars($answer_row['content']);?></p>
+                            <table width="100%">
+                                <tr>
+                                    <td class="custom">
+                                        <?php if (@$_SESSION['email'] && ($answer_row['userID'] == $_SESSION['userID'] or $_SESSION['user_roleID'] == 1)) {
+                                            echo "<a>Share</a> <a href='edit_answer.php?id=".$answer_row['answerID']."'>Edit</a> <a>Delete</a>";
                                             } else {
-                                                echo "<td></td>";
-                                            } ?>
-                                            <td>Asked <?php echo htmlspecialchars($answer_row['create_date']); ?></td>
-                                        </tr>
-                                        <tr>
-                                            <?php if ($answer_row['update_date'] && $answer_row['update_userID'] != null) {
-                                                echo "<td>".htmlspecialchars($answer_row['update_username'])."</td>";
-                                            } else {
-                                                echo "<td></td>";
-                                            } ?>
-                                            <td><?php echo htmlspecialchars($answer_row['answer_username']); ?></td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    <?php }
-                }
-            } else {
-                echo "<p>Error: Database query for answers failed</p>";
-            }
-            ?>
+                                            echo "<a>Share</a>";
+                                        } ?>
+                                    </td>
+                                    <td>
+                                        <table cellpadding="5%" class="to_right">
+                                            <tr class="custom">
+                                                <?php if ($answer_row['update_date']) {
+                                                    echo "<td>Updated ".$answer_row['update_date']."</td>";
+                                                } else {
+                                                    echo "<td></td>";
+                                                } ?>
+                                                <td>Asked <?php echo $answer_row['create_date']; ?></td>
+                                            </tr>
+                                            <tr class="custom">
+                                                <?php if ($answer_row['update_date'] && $answer_row['update_userID'] != null) {
+                                                    echo "<td><img src='images/profile/user.jpg' height='55px' alt='user profile image'>".htmlspecialchars($answer_row['update_username'])."</td>";
+                                                } else {
+                                                    echo "<td></td>";
+                                                } ?>
+                                                <td><img src='images/profile/user.jpg' height='55px' alt='user profile image'><?php echo htmlspecialchars($answer_row['answer_username']); ?></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <hr class="my-3">
+                        <?php } ?>
+                    </div>
+                </div>
+            <?php }
+        } else {
+            echo "<p>Error: Database query for answers failed</p>";
+        }
+        ?>
 
         <!-- Post answer section -->
         <?php
-        if (@$_SESSION['email']) {
-            echo "<div class='post-container'>
+        if (@$_SESSION['email']) {?>
+            <div class=" container mb-3">
                 <form method='post'>
-                    <table style='padding: 20px;'>
-                        <tr>
-                            <td><h2>Your Answer</h2></td>
-                        </tr>
-                        <tr>
-                            <td><textarea style='resize: none' name='textarea_content' rows='10' cols='100'></textarea></td>
-                        </tr>
-                        <tr>
-                            <td><input type='submit' name='btn_submit_answer' value='Post Your Answer'></td>
-                        </tr>
-                    </table>
+                    <label for="formTextarea" class="form-label">Your Answer</label>
+                    <textarea name='textarea_content' class="form-control" id="formTextarea" rows="3"></textarea>
+                    <input style="margin-top: 15px" type='submit' name='btn_submit_answer' value='Post Your Answer'>
                 </form>
-            </div>";
-        }
+            </div>
+        <?php }
     } else {
         //handle the case where the query fails
         echo "Error: " . $sql . "<br>" . $statement->errorInfo()[2];

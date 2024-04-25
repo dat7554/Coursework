@@ -1,14 +1,16 @@
 <?php
-//TODO: create session
-//TODO: repair to display line 59
-//TODO: htmlspecialchars
-
 session_start();
 include_once('connection.php');
 include_once('common_function.php');
+
+//check user
+if (isset($_SESSION['email'])) {
+    header('location: index.php');
+    exit();
+}
 ?>
 
-<html>
+<html lang="en">
 <head>
     <title>Sign in</title>
     <meta charset="utf-8">
@@ -21,30 +23,26 @@ include_once('common_function.php');
 include('header.php');
 ?>
 
-<form method="post">
-    <table cellpadding="10">
-        <tr style="background:lightblue;">
-            <td width="45%">Info</td>
-            <td>Value</td>
-        </tr>
-        <tr>
-            <td>Email</td>
-            <td><input type="text" name="txt_email"/></td>
-        </tr>
-        <tr>
-            <td>Password</td>
-            <td><input type="Password" name="txt_pass"/></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><input type="submit" value="Sign in" name="btn_submit"/></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>Don't have an account? <a href="sign_up.php">Sign up</a></td>
-        </tr>
-    </table>
-</form>
+<div class="container mb-3" style="width: 25%; padding-top: 35px">
+    <h1>Sign in</h1>
+    <form method="post">
+        <div class="mb-3">
+            <label for="inputEmail" class="form-label">Email</label>
+            <input type="text" name="txt_email" id="inputEmail" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="inputPass" class="form-label">Password</label>
+            <input type="password" name="txt_pass" id="inputPass" class="form-control">
+        </div>
+        <div class="mb-3">
+            <input class="btn btn-primary" type="submit" value="Sign in" name="btn_submit"/>
+        </div>
+        <div class="mb-3">
+            <p>Don't have an account? <a href="sign_up.php">Sign up</a></p>
+        </div>
+    </form>
+</div>
+
 <?php
 if (isset($_POST['btn_submit'])) {
     //user press "register" button

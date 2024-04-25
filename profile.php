@@ -1,8 +1,7 @@
 <?php
-//TODO: add personal information from database + add/change profile pic function + change pass + total posts
-//TODO: header
+
+//TODO: add personal information from database + total posts
 //TODO: profile display as user_id=$user_id
-//TODO: htmlspecialchars
 
 session_start();
 include_once('connection.php');
@@ -17,7 +16,6 @@ if (@$_SESSION['email']) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
-<center>
 <?php
 //header
 include('header.php');

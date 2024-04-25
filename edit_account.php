@@ -1,8 +1,4 @@
 <?php
-//TODO: change info-value layout
-//TODO: add avatar function to edit_account.php, database.php
-//TODO: change pass (if possible)
-//TODO: check form enctype necessary
 
 session_start();
 include_once('connection.php');
@@ -44,126 +40,92 @@ if ($userID != $_SESSION['userID'] && $_SESSION['user_roleID'] != 1) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
-<center>
 
-    <?php
-    //header
-    include('header.php');
-    ?>
+<?php //header
+include('header.php');
+?>
 
-    <form method="post" enctype="multipart/form-data"> <!-- as user upload file -->
-        <table cellpadding="10">
-            <tr style="background:lightblue;">
-                <td width="25%">Info</td>
-                <td>Value</td>
-            </tr>
-            <?php
-            if ($_SESSION['user_roleID'] == 1) {
-                echo "<tr>
-                    <td>Role</td>
-                    <td>
-                        <select name='user_roleID'>";
-                //retrieve and display all roles in a dropdown menu
-                $sql = "SELECT * FROM user_role";
-                $statement = $pdo->query($sql);
+<div class="container my-3" style="width: 50%">
+    <h1>Edit account</h1>
+    <form method="post">
+        <div class="mb-3">
+            <?php if ($_SESSION['user_roleID'] == 1) {?>
+                <label for="selectRole" class="form-label">Role: </label>
+                <select name='user_roleID' id="selectRole">
+                    <?php
+                    $sql = "SELECT * FROM user_role";
+                    $statement = $pdo->query($sql);
 
-                if ($statement) {
-                    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-                        echo "<option value='" . $row['user_roleID'] . "' ";
+                    if ($statement) {
+                        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                            echo "<option value='" . $row['user_roleID'] . "' ";
 
-                        //display current role as default
-                        if ($row['user_roleID'] == $user['user_roleID']) {
-                            echo "selected = 'selected'";
+                            //display current role as default
+                            if ($row['user_roleID'] == $user['user_roleID']) {
+                                echo "selected = 'selected'";
+                            }
+
+                            echo ">" . $row['role'] . "</option>";
                         }
-
-                        echo ">" . $row['role'] . "</option>";
+                    } else {
+                        echo "Error fetching roles.";
                     }
-                } else {
-                    echo "Error fetching roles.";
-                }
-
-                echo "</select>
-                    </td>
-                </tr>";
-            }
-            ?>
-
-            <!-- <?php
-            if ($user['image']) {
-                echo "
-            <tr>
-                <td>Current Image</td>
-                <td><img alt='current image in the post' src='" . $user['image'] . "' width='50%'></td>
-            </tr>";
-            }
-            ?>
-            <tr>
-                <td>Upload profile avatar <br>(<b>.png</b>, <b>.jpeg</b>, <b>.jpg</b>)</td>
-                <td>
-                    <input type="file" name="image">
-                </td>
-            </tr>-->
-            <tr>
-                <td>Email</td>
-                <td><input type="email" name="txt_email" value="<?php echo htmlspecialchars($user['email']); ?>"/></td>
-            </tr>
-            <tr>
-                <td>Username</td>
-                <td><input type="text" name="txt_username" value="<?php echo htmlspecialchars($user['username']); ?>"></td>
-            </tr>
-            <tr>
-                <td>Personal description</td>
-                <td><textarea style="resize: none; width: 100%; height: 150px" name="textarea_description"><?php echo htmlspecialchars($user['personal_description']);?></textarea></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><input type="submit" value="Save Changes" name="btn_submit"/></td>
-            </tr>
-        </table>
+                    ?>
+                </select>
+            <?php }?>
+        </div>
+        <div class="mb-3">
+            <label for="inputEmail" class="form-label">Email</label>
+            <input class="form-control" name="txt_email" type="text" id="inputEmail" value="<?php echo htmlspecialchars($user['email']); ?>">
+        </div>
+        <div class="mb-3">
+            <label for="inputUsername" class="form-label">Username</label>
+            <input class="form-control" name="txt_username" type="text" id="inputUsername" value="<?php echo htmlspecialchars($user['username']); ?>">
+        </div>
+        <div class="mb-3">
+            <label for="inputDescription" class="form-label">Personal description</label>
+            <textarea name='textarea_description' class="form-control" id="inputDescription" rows="5"><?php echo htmlspecialchars($user['personal_description']);?></textarea>
+        </div>
+        <div class="mb-3">
+            <input class="btn btn-primary" type="submit" value="Save Changes" name="btn_submit"/>
+        </div>
     </form>
+</div>
 
-    <?php //check if the form is submitted to edit the post
-    if (isset($_POST['btn_submit'])) {
-        //retrieve data from the form
-        $user_roleID = $_POST['user_roleID'];
-        $email = $_POST['txt_email'];
-        $username = $_POST['txt_username'];
-        $personal_description = $_POST['textarea_description'];
+<?php //check if the form is submitted to edit the post
+if (isset($_POST['btn_submit'])) {
+    //retrieve data from the form
+    $user_roleID = $_POST['user_roleID'];
+    $email = $_POST['txt_email'];
+    $username = $_POST['txt_username'];
+    $personal_description = $_POST['textarea_description'];
 
-        if (isset($user_roleID, $email, $username, $personal_description)) {
-            if (empty($user_roleID) or empty($email) or empty($username)) {
-                echo "Please fill in all required fields";
-                exit();
-            } else {
-                $sql = "UPDATE user SET user_roleID = :user_roleID, email = :email, username = :username, personal_description = :personal_description, update_date = NOW()";
+    if (isset($user_roleID, $email, $username, $personal_description)) {
+        if (empty($user_roleID) or empty($email) or empty($username)) {
+            echo "Please fill in all required fields";
+            exit();
+        } else {
+            $sql = "UPDATE user SET user_roleID = :user_roleID, email = :email, username = :username, personal_description = :personal_description, update_date = NOW()";
 
-                //check if an image file has been uploaded
-                //if (!empty($_FILES['image']['name'])) {}
 
-                //update post in database
-                $sql .= " WHERE userID = :userID";
-                $statement = $pdo->prepare($sql);
-                $statement->bindParam(':user_roleID', $user_roleID, PDO::PARAM_INT);
-                $statement->bindParam(':email', $email, PDO::PARAM_STR);
-                $statement->bindParam(':username', $username, PDO::PARAM_STR);
-                $statement->bindParam(':personal_description', $personal_description, PDO::PARAM_STR);
-                $statement->bindParam(':userID', $userID, PDO::PARAM_INT);
-            }
+            //update post in database
+            $sql .= " WHERE userID = :userID";
+            $statement = $pdo->prepare($sql);
+            $statement->bindParam(':user_roleID', $user_roleID, PDO::PARAM_INT);
+            $statement->bindParam(':email', $email, PDO::PARAM_STR);
+            $statement->bindParam(':username', $username, PDO::PARAM_STR);
+            $statement->bindParam(':personal_description', $personal_description, PDO::PARAM_STR);
+            $statement->bindParam(':userID', $userID, PDO::PARAM_INT);
+        }
 
-            //bind image param only if image uploaded successfully
-            //if (!empty($image)) {
-            //    $statement->bindParam(':image', $image, PDO::PARAM_STR);
-            //}
-
-            if ($statement->execute()) {
-                echo "Updated successfully<br>";
-            } else {
-                echo "Error: " . $sql . "<br>" . $statement->errorInfo()[2];
-            }
+        if ($statement->execute()) {
+            echo "Updated successfully<br>";
+        } else {
+            echo "Error: " . $sql . "<br>" . $statement->errorInfo()[2];
         }
     }
-    ?>
-</center>
+}
+?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
 </body>
 </html>

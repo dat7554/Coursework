@@ -17,57 +17,49 @@ if (!isset($_SESSION['email'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
-<center>
 <?php
 //header
 include('header.php');
 ?>
-    <form method="post" enctype="multipart/form-data"> <!-- as user upload file -->
-        <table cellpadding="10">
-            <tr style="background:lightblue;">
-                <td width="25%"></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Post title</td>
-                <td><input type="text" name="txt_title" value="<?php echo isset($_POST["txt_title"]) ? htmlentities($_POST["txt_title"]) : ''; ?>"/></td>
-            </tr>
-            <tr>
-                <td>Module</td>
-                <td>
-                    <select name="moduleID">
-                        <?php
-                        //retrieve and display all modules in a dropdown menu
-                        $sql = "SELECT moduleID, name FROM module";
-                        $statement = $pdo->query($sql);
 
-                        if ($statement) {
-                            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-                                echo "<option value='" . $row['moduleID'] . "'>" . $row['name'] . "</option>";
-                            }
-                        } else {
-                            echo "Error fetching modules.";
-                        }
-                        ?>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Content</td>
-                <td><textarea style="resize: none; width: 100%; height: 150px" name="textarea_content"></textarea></td>
-            </tr>
-            <tr>
-                <td>Upload image <br>(<b>.png</b>, <b>.jpeg</b>, <b>.jpg</b>)</td>
-                <td>
-                    <input type="file" name="image">
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><input type="submit" value="Create the post" name="btn_submit"/></td>
-            </tr>
-        </table>
+<div class="container my-3" style="width: 50%">
+    <h1>Create a post</h1>
+    <form method="post" enctype="multipart/form-data"> <!-- as user upload file -->
+        <div class="mb-3">
+            <label for="inputPostTitle" class="form-label">Post title</label>
+            <input type="text" name="txt_title" id="inputPostTitle" class="form-control" value="<?php echo isset($_POST["txt_title"]) ? htmlentities($_POST["txt_title"]) : ''; ?>">
+        </div>
+        <div class="mb-3">
+            <label for="selectModule" class="form-label">Module: </label>
+            <select name="moduleID" id="selectModule">
+                <?php
+                //retrieve and display all modules in a dropdown menu
+                $sql = "SELECT moduleID, name FROM module";
+                $statement = $pdo->query($sql);
+
+                if ($statement) {
+                    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                        echo "<option value='" . $row['moduleID'] . "'>" . $row['name'] . "</option>";
+                    }
+                } else {
+                    echo "Error fetching modules.";
+                }
+                ?>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="inputPostContent" class="form-label">Content</label>
+            <textarea name='textarea_content' class="form-control" id="inputPostContent" rows="5"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="formFile" class="form-label">Upload image (<b>.png</b>, <b>.jpeg</b>, <b>.jpg</b>)</label>
+            <input class="form-control" name="image" type="file" id="formFile">
+        </div>
+        <div class="mb-3">
+            <input class="btn btn-primary" type="submit" value="Create the post" name="btn_submit"/>
+        </div>
     </form>
+</div>
 
     <?php
     if (isset($_POST['btn_submit'])) {
@@ -150,7 +142,7 @@ include('header.php');
         }
     }
     ?>
-</center>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
 </body>
 </html>
