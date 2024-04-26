@@ -40,10 +40,10 @@ if ($statement->execute()) {
             <table class="table align-middle">
                 <thead class="table-dark align-middle">
                 <tr>
-                    <td class="col-5" scope="col">Title</td>
-                    <td scope="col">Creator</td>
-                    <td scope="col">Date created</td>
-                    <td scope="col">Date updated</td>
+                    <td class="col-5">Title</td>
+                    <td>Creator</td>
+                    <td>Date created</td>
+                    <td>Date updated</td>
                 </tr>
                 </thead>
                 <tbody class="table-group-divider">
@@ -51,12 +51,21 @@ if ($statement->execute()) {
                 while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {?>
                 <tr>
                     <td scope="row"><a href='post.php?id=<?php echo htmlspecialchars($row['postID'])?>'><?php echo htmlspecialchars($row['title'])?></a></td>
-                    <td><img src="images/profile/user.jpg" height="55px" alt="user profile image"><?php echo htmlspecialchars($row['username'])?></td>
+                    <td>
+                        <?php if (!empty($row['username'])) { ?>
+                            <a href='profile.php?user_id=<?php echo $row['userID'];?>'>
+                                <img src="images/profile/user.jpg" height="55px" alt="user profile image"><?php echo htmlspecialchars($row['username']); ?>
+                            </a>
+                        <?php } else { ?>
+                            <img src="images/profile/user.jpg" height="55px" alt="user profile image">[DELETED USER]
+                        <?php } ?>
+                    </td>
                     <td><?php echo $row['create_date']?></td>
                     <td><?php echo $row['update_date']?></td>
                 </tr>
                 <?php } ?>
                 </tbody>
+            </table>
         </div>
     </div>
 <?php } else {

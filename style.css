@@ -6,3 +6,7 @@
 .to_right {
     float: right;
 }
+
+a {
+    text-decoration: none
+}

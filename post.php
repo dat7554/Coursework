@@ -37,17 +37,20 @@ if ($_GET['id']) {
         $row = $statement->fetch(PDO::FETCH_ASSOC); ?>
 
         <!-- Post section -->
-        <div class='container my-3'>
+        <div class='container my-3' style="width: 70%;">
             <div class="jumbo">
                 <h1 class="display-3"><?php echo htmlspecialchars($row['title']); ?></h1>
                 <p class="lead">Module: <?php echo $row['name']?></p>
-                <hr class="my-3">
-                <p>
-                    <?php echo htmlspecialchars($row['content']);
-                    if (!empty($row['image'])) {
-                        echo "<br><img style='padding: 20px' alt='image uploaded by the creator' src=".$row['image']." width='50%'>";
-                    } ?>
-                </p>
+                <div class="card text-dark bg-light">
+                    <div class="card-body">
+                        <p class="card-text">
+                            <?php echo htmlspecialchars($row['content']);
+                            if (!empty($row['image'])) {
+                                echo "<br><img style='padding: 20px' alt='image uploaded by the creator' src=".$row['image']." width='50%'>";
+                            } ?>
+                        </p>
+                    </div>
+                </div>
                 <table width="100%">
                     <tr>
                         <td class="custom">
@@ -69,11 +72,19 @@ if ($_GET['id']) {
                                 </tr>
                                 <tr class="custom">
                                     <?php if ($row['update_date'] && $row['update_userID'] != null) {
-                                        echo "<td><img src='images/profile/user.jpg' height='55px' alt='user profile image'>".htmlspecialchars($row['update_username'])."</td>";
+                                        echo "<td><a href='profile.php?user_id={$row['update_userID']}'><img src='images/profile/user.jpg' height='55px' alt='user profile image'>".htmlspecialchars($row['update_username'])."</a></td>";
                                     } else {
                                         echo "<td></td>";
                                     } ?>
-                                    <td><img src='images/profile/user.jpg' height='55px' alt='user profile image'><?php echo htmlspecialchars($row['create_username']); ?></td>
+                                    <td>
+                                        <?php if (!empty($row['create_username'])) { ?>
+                                            <a href='profile.php?user_id=<?php echo $row['userID'];?>'>
+                                                <img src="images/profile/user.jpg" height="55px" alt="user profile image"><?php echo htmlspecialchars($row['create_username']); ?>
+                                            </a>
+                                        <?php } else { ?>
+                                            <img src="images/profile/user.jpg" height="55px" alt="user profile image">[DELETED USER]
+                                        <?php } ?>
+                                    </td>
                                 </tr>
                             </table>
                         </td>
@@ -94,11 +105,15 @@ if ($_GET['id']) {
 
         if ($answer_statement->execute()) {
             if ($answer_statement->rowCount() > 0) {?>
-                <div class='container my-sm-3'>
+                <div class='container my-sm-3' style="width: 70%;">
                     <div class="jumbo">
                         <h3 class="display-6">Answers</h3>
                         <?php while ($answer_row = $answer_statement->fetch(PDO::FETCH_ASSOC)) {?>
-                            <p><?php echo htmlspecialchars($answer_row['content']);?></p>
+                            <div class="card text-dark bg-light">
+                                <div class="card-body">
+                                    <p class="card-text"><?php echo htmlspecialchars($answer_row['content']);?></p>
+                                </div>
+                            </div>
                             <table width="100%">
                                 <tr>
                                     <td class="custom">
@@ -120,11 +135,19 @@ if ($_GET['id']) {
                                             </tr>
                                             <tr class="custom">
                                                 <?php if ($answer_row['update_date'] && $answer_row['update_userID'] != null) {
-                                                    echo "<td><img src='images/profile/user.jpg' height='55px' alt='user profile image'>".htmlspecialchars($answer_row['update_username'])."</td>";
+                                                    echo "<td><a href='profile.php?user_id={$row['update_userID']}'><img src='images/profile/user.jpg' height='55px' alt='user profile image'>".htmlspecialchars($answer_row['update_username'])."</a></td>";
                                                 } else {
                                                     echo "<td></td>";
                                                 } ?>
-                                                <td><img src='images/profile/user.jpg' height='55px' alt='user profile image'><?php echo htmlspecialchars($answer_row['answer_username']); ?></td>
+                                                <td>
+                                                    <?php if (!empty($answer_row['answer_username'])) { ?>
+                                                        <a href='profile.php?user_id=<?php echo $answer_row['userID'];?>'>
+                                                            <img src="images/profile/user.jpg" height="55px" alt="user profile image"><?php echo htmlspecialchars($answer_row['answer_username']); ?>
+                                                        </a>
+                                                    <?php } else { ?>
+                                                        <img src="images/profile/user.jpg" height="55px" alt="user profile image">[DELETED USER]
+                                                    <?php } ?>
+                                                </td>
                                             </tr>
                                         </table>
                                     </td>
@@ -143,11 +166,11 @@ if ($_GET['id']) {
         <!-- Post answer section -->
         <?php
         if (@$_SESSION['email']) {?>
-            <div class=" container mb-3">
+            <div class=" container mb-3" style="width: 70%;">
                 <form method='post'>
                     <label for="formTextarea" class="form-label">Your Answer</label>
                     <textarea name='textarea_content' class="form-control" id="formTextarea" rows="3"></textarea>
-                    <input style="margin-top: 15px" type='submit' name='btn_submit_answer' value='Post Your Answer'>
+                    <input class="btn btn-primary" style="margin-top: 15px" type='submit' name='btn_submit_answer' value='Post Your Answer'>
                 </form>
             </div>
         <?php }

@@ -21,8 +21,8 @@ include_once('common_function.php');
 include('header.php');
 ?>
 
-<div class="container mb-3" style="width: 25%; padding-top: 35px">
-    <h1>Sign in</h1>
+<div class="container mb-3" style="width: 28%; padding-top: 35px">
+    <h1>Sign up</h1>
     <form method="post">
         <div class="mb-3">
             <label for="inputEmail" class="form-label">Email</label>
@@ -51,10 +51,9 @@ include('header.php');
             <input class="btn btn-primary" type="submit" value="Register" name="btn_submit"/>
         </div>
         <div class="mb-3">
-            <p>Don't have an account? <a href="sign_in.php">Sign in</a></p>
+            <p>Already have an account? <a href="sign_in.php">Sign in</a></p>
         </div>
     </form>
-</div>
 
 <?php
 if (isset($_POST['btn_submit'])) {
@@ -69,7 +68,7 @@ if (isset($_POST['btn_submit'])) {
     if (!empty($username) && !empty($email) && (!empty($pass)) && (!empty($retyped_pass))) {
 
         if (empty($_POST['g-recaptcha-response'])) {
-            echo "Please solve reCAPTCHA";
+            echo "<p style='color: red'>Please solve reCAPTCHA</p>";
             exit();
         }
 
@@ -78,7 +77,7 @@ if (isset($_POST['btn_submit'])) {
         $data = json_decode($response);
 
         if (!$data->success) {
-            echo "Please try again";
+            echo "<p style='color: red'>Please try again</p>";
             exit();
         }
 
@@ -91,9 +90,9 @@ if (isset($_POST['btn_submit'])) {
 
         if ($row > 0) {
             if ($row['username'] == $username) {
-                echo "Username is already in used";
+                echo "<p style='color: red'>Username is already in used</p>";
             } elseif ($row['email'] == $email) {
-                echo "Email is already in used";
+                echo "<p style='color: red'>Email is already in used</p>";
             }
             exit();
         }
@@ -104,12 +103,14 @@ if (isset($_POST['btn_submit'])) {
             if ($retyped_pass == $pass) {
                     //password matching
                 $hashed_pass = password_hash($pass, PASSWORD_DEFAULT);
+                $user_roleID = 2;
 
-                $sql = "INSERT INTO user (email, username, password) VALUES (:email, :username, :hashed_pass)";
+                $sql = "INSERT INTO user (email, username, password, user_roleID) VALUES (:email, :username, :hashed_pass, :user_roleID)";
                 $statement = $pdo->prepare($sql);
                 $statement->bindParam(':email', $email, PDO::PARAM_STR);
                 $statement->bindParam(':username', $username, PDO::PARAM_STR);
                 $statement->bindParam(':hashed_pass', $hashed_pass, PDO::PARAM_STR);
+                $statement->bindParam(':user_roleID', $user_roleID, PDO::PARAM_INT);
 
                 if ($statement->execute()) {
                     echo "Account created successfully. Please <a href='sign_in.php'>sign in</a> to continue";
@@ -118,16 +119,17 @@ if (isset($_POST['btn_submit'])) {
                 }
 
             } else {
-                echo 'Please check the password confirmation';
+                echo '<p style="color: red">Please check the password confirmation</p>';
             }
         } else {
-            echo 'Password must be greater than 5';
+            echo '<p style="color: red">Password must be greater than 5</p>';
         }
     } else {
-        echo 'Please fill in all the fields';
+        echo '<p style="color: red">Please fill in all the fields</p>';
     }
 }
 ?>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
 </body>
 </html>

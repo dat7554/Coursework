@@ -43,7 +43,7 @@ if ($statement->execute()) {
 
         if (isset($content)) {
             if (empty($content)) {
-                echo "Please fill in all required fields";
+                echo "<p style='color: red'>Please fill in all required fields</p>";
                 exit();
             }
 
@@ -55,7 +55,7 @@ if ($statement->execute()) {
             $statement->bindParam(':answerID', $answerID, PDO::PARAM_INT);
 
             if ($statement->execute()) {
-                echo "Updated successfully<br>";
+                echo "<p style='color: red'>Updated successfully</p><br>";
             } else {
                 echo "Error: " . $sql . "<br>" . $statement->errorInfo()[2];
             }

@@ -24,7 +24,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false"><?php echo htmlspecialchars($_SESSION['username']);?></a>
                         <ul class="dropdown-menu">
-                            <li><a class='dropdown-item' href='profile.php?user_id=<?php echo htmlspecialchars($_SESSION['userID']);?>'>Profile</a></li>
+                            <li><a class='dropdown-item' href='profile.php?user_id=<?php echo $_SESSION['userID'];?>'>Profile</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class='dropdown-item' href='index.php?action=sign_out'>Sign out</a></li>
                         </ul>
