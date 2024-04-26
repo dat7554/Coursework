@@ -1,6 +1,4 @@
 <?php
-//TODO: delete function
-
 session_start();
 include_once('connection.php');
 include_once('common_function.php');
@@ -62,7 +60,7 @@ if ($statement = $pdo->query($sql)) {
                     <td style='text-align: center'><a href='edit_account.php?id=<?php echo $row['userID']?>'>Edit</a></td>
                     <?php
                     //check admin row, not to display delete
-                    if ($row['user_roleID'] != 1 && $row['active'] = 1) {
+                    if ($row['user_roleID'] != 1) {
                         echo "<td style='text-align: center'><a href='deactivate_account.php?id={$row['userID']}'>Delete</a></td>";
                     } else {
                         echo "<td style='text-align: center'>-</td>";

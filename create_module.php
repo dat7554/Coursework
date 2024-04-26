@@ -25,9 +25,8 @@ include('header.php');
     <form method="post">
         <label for="inputModuleName" class="form-label">Module Name</label>
         <input type="text" name="txt_name" id="inputModuleName" class="form-control">
-        <input style="margin-top: 15px" type="submit" value="Create the module" name="btn_submit"/>
+        <input class="btn btn-primary" style="margin-top: 15px" type="submit" value="Create the module" name="btn_submit"/>
     </form>
-</div>
 
 <?php
 if (isset($_POST['btn_submit'])) {
@@ -35,6 +34,11 @@ if (isset($_POST['btn_submit'])) {
     $user = $_SESSION['username'];
 
     if (isset($name)) {
+        //check if any of the required fields are empty
+        if (empty($name)) {
+            echo "<p style='color: red'>Please fill in all required field</p>";
+            exit();
+        }
         try {
             //prepare sql statement
             $sql = "INSERT INTO module (name, userID) VALUES (:name, :userID)";
@@ -46,7 +50,7 @@ if (isset($_POST['btn_submit'])) {
 
             //execute statement
             if ($statement->execute()) {
-                echo "Module created";
+                echo "<p style='color: red'>Module created</p>";
             } else {
                 echo "Error: " . $sql . "<br>" . $statement->errorInfo()[2];
             }
@@ -54,12 +58,13 @@ if (isset($_POST['btn_submit'])) {
             echo "Error: " . $e->getMessage();
         }
     } else {
-        echo "Module name cannot be empty";
+        echo "<p style='color: red'>Module name cannot be empty</p>";
     }
 }
 
 include_once('sign_out.php');
 ?>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
 </body>
 </html>

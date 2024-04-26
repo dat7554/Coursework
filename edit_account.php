@@ -68,7 +68,7 @@ include('header.php');
                             echo ">" . $row['role'] . "</option>";
                         }
                     } else {
-                        echo "Error fetching roles.";
+                        echo "<p style='color: red'>Error fetching roles.</p>";
                     }
                     ?>
                 </select>
@@ -90,7 +90,6 @@ include('header.php');
             <input class="btn btn-primary" type="submit" value="Save Changes" name="btn_submit"/>
         </div>
     </form>
-</div>
 
 <?php //check if the form is submitted to edit the post
 if (isset($_POST['btn_submit'])) {
@@ -102,7 +101,7 @@ if (isset($_POST['btn_submit'])) {
 
     if (isset($user_roleID, $email, $username, $personal_description)) {
         if (empty($user_roleID) or empty($email) or empty($username)) {
-            echo "Please fill in all required fields";
+            echo "<p style='color: red'>Please fill in all required fields</p>";
             exit();
         } else {
             $sql = "UPDATE user SET user_roleID = :user_roleID, email = :email, username = :username, personal_description = :personal_description, update_date = NOW()";
@@ -119,13 +118,14 @@ if (isset($_POST['btn_submit'])) {
         }
 
         if ($statement->execute()) {
-            echo "Updated successfully<br>";
+            echo "<p style='color: red'>Updated successfully</p><br>";
         } else {
             echo "Error: " . $sql . "<br>" . $statement->errorInfo()[2];
         }
     }
 }
 ?>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
 </body>
 </html>

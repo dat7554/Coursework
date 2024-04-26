@@ -94,7 +94,6 @@ include('header.php');
             <input class="btn btn-primary" type="submit" value="Save Changes" name="btn_submit"/>
         </div>
     </form>
-</div>
 
 <?php //check if the form is submitted to edit the post
 if (isset($_POST['btn_submit'])) {
@@ -107,7 +106,7 @@ if (isset($_POST['btn_submit'])) {
     if (isset($title, $content, $moduleID)) {
         //check if any of the required fields are empty
         if (empty($title) or empty($content) or empty($moduleID)) {
-            echo "Please fill in all required fields";
+            echo "<p style='color: red'>Please fill in all required fields</p>";
             exit();
         } else {
             $sql = "UPDATE post SET update_userID = :update_userID, title = :title, content = :content, moduleID = :moduleID, update_date = NOW()";
@@ -138,20 +137,20 @@ if (isset($_POST['btn_submit'])) {
                     //move uploaded file to desired location
                     if (!empty($errors)) {
                         foreach ($errors as $error) {
-                            echo $error;
+                            echo "<p style='color: red'>". $error ."</p>";
                         }
                         exit();
                     }
 
                     $image = 'images/post/' . $file_name;
                     if (!move_uploaded_file($file_tmp, "images/post/$file_name")) {
-                        echo "Error occurred while moving the uploaded file";
+                        echo "<p style='color: red'>Error occurred while moving the uploaded file</p>";
                         exit();
                     }
                     $sql .= ", image = :image";
-                    echo "Image uploaded successfully <br>";
+                    echo "<p style='color: red'>Image uploaded successfully </p><br>";
                 } else {
-                    echo "Error occurred during file upload";
+                    echo "<p style='color: red'>Error occurred during file upload</p>";
                     exit();
                 }
             }
@@ -171,14 +170,13 @@ if (isset($_POST['btn_submit'])) {
             }
 
             if ($statement->execute()) {
-                echo "Updated successfully<br>";
-            } else {
-                echo "Error: " . $sql . "<br>" . $statement->errorInfo()[2];
+                echo "<p style='color: red'>Updated successfully</p><br>";
             }
         }
     }
 }
 ?>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
 </body>
 </html>

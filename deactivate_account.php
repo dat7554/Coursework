@@ -10,7 +10,7 @@ if (isset($_SESSION['email']) && $_SESSION['user_roleID'] = 1) {
         $userID = $_GET['id'];
 
         //update the active status of the user to 0 (inactive)
-        $sql = "UPDATE user SET active = 0 WHERE userID = :userID";
+        $sql = "DELETE FROM user WHERE userID = :userID";
         $statement = $pdo->prepare($sql);
         $statement->bindParam(':userID', $userID, PDO::PARAM_INT);
 

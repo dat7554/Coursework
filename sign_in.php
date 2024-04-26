@@ -41,7 +41,6 @@ include('header.php');
             <p>Don't have an account? <a href="sign_up.php">Sign up</a></p>
         </div>
     </form>
-</div>
 
 <?php
 if (isset($_POST['btn_submit'])) {
@@ -67,26 +66,22 @@ if (isset($_POST['btn_submit'])) {
             if (password_verify($pass,$hashed_pass)) {
                 echo "Successfully signed in as <strong>$email</strong>. Click <a href='index.php'>here</a> to the homepage";
 
-                // Create sessions so we know the user is logged in, they basically act like cookies but remember the data on the server.
-                //session_regenerate_id();
-                //$_SESSION['loggedin'] = true;
+                //create sessions to know the user is logged in
                 $_SESSION['email'] = $email;
                 $_SESSION['username'] = $username;
                 $_SESSION['userID'] = $userID;
                 $_SESSION['user_roleID'] = $user_roleID;
                 header('location: index.php');
             } else {
-                echo 'Incorrect password';
+                echo '<p style="color: red">Incorrect password</p>';
             }
         } else {
-            echo 'Error: ' . $sql . '<br>' . $statement->errorInfo()[2];
-            echo 'Incorrect username or email';
+            echo '<p style="color: red">Incorrect username or email</p>';
         }
-    } else {
-        echo 'Please fill in all the fields';
     }
 }
 ?>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
 </body>
 </html>

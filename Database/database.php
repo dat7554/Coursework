@@ -77,7 +77,6 @@ function createUserTable($pdo)
             username VARCHAR(255) NOT NULL,
             password VARCHAR(255) NOT NULL,
             personal_description VARCHAR(1000) NOT NULL,
-            active BOOLEAN DEFAULT true,
             log_in DATETIME NOT NULL,
             register_date DATETIME DEFAULT CURRENT_TIMESTAMP,
             update_date DATETIME ON UPDATE CURRENT_TIMESTAMP,
@@ -135,7 +134,7 @@ function createUserRoleTable($pdo)
         }
 
         //new roles to be inserted
-        $new_roles = ['admin', 'member', 'guest'];
+        $new_roles = ['admin', 'member'];
 
         //filter out new roles that do not already exist
         $roles_to_add = array_diff($new_roles, $existing_roles);

@@ -5,7 +5,7 @@ if (isset($_POST['btn_submit_answer'])) {
 
     if (isset($content)) {
         if (empty($content)) {
-            echo "Please fill in all required fields";
+            echo "<p style='color: red'>Please fill in all required fields</p>";
             exit();
         }
         //prepare sql statement
@@ -21,8 +21,6 @@ if (isset($_POST['btn_submit_answer'])) {
         if ($statement->execute()) {
             header("Location:post.php?id={$_GET['id']}");
             exit();
-        } else {
-            echo "Error: " . $sql . "<br>" . $statement->errorInfo()[2];
         }
     }
 }

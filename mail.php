@@ -58,26 +58,23 @@ if (isset($_POST['btn_submit'])) {
     }
 }
 ?>
-
-<form method="post">
-    <table cellpadding="10">
-        <tr style="background:lightblue;">
-            <td style='border: 1px solid black; padding: 20px;' width='400px' colspan='2'>Contact</td>
-        </tr>
-        <tr>
-            <td>First Name:</td>
-            <td><input type="text" name="txt_fname"></td>
-        </tr>
-        <tr>
-            <td>Last Name</td>
-            <td><input type="text" name="txt_lname"/></td>
-        </tr>
-        <tr>
-            <td>Message</td>
-            <td><textarea style="resize: none; width: 100%; height: 150px" name="textarea_message"></textarea></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><input type="submit" value="Send mail" name="btn_submit"></td>
-        </tr>
-</form>
+<div class="container my-3" style="width: 50%">
+    <h3>Contact Form</h3>
+    <form method="post">
+        <div class="mb-3">
+            <label for="inputFirstName" class="form-label">First Name</label>
+            <input type="text" name="txt_fname" id="inputFirstName" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="inputLastName" class="form-label">Last Name</label>
+            <input type="text" name="txt_lname" id="inputLastName" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="inputMessage" class="form-label">Message</label>
+            <textarea type="text" name="textarea_message" id="inputMessage" class="form-control" rows="5"></textarea>
+        </div>
+        <div class="mb-3">
+            <input class="btn btn-primary" type="submit" value="Send mail" name="btn_submit"/>
+        </div>
+    </form>
+</div>
