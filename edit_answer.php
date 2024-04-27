@@ -39,7 +39,7 @@ if ($statement->execute()) {
     //check if the form is submitted
     if (isset($_POST['btn_submit_answer'])) {
         $content = $_POST['textarea_content'];
-        $update_userID = $_SESSION['userID'];
+        $update_userID = ($answer['userID'] != $_SESSION['userID']) ? $_SESSION['userID'] : null; //if user is the post creator, no need to display the username again
 
         if (isset($content)) {
             if (empty($content)) {

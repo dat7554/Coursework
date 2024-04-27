@@ -8,13 +8,15 @@ if (!isset($_GET['user_id'])) {
     exit();
 }
 
+$userID = $_GET['user_id'];
+
 $sql = "SELECT u.*, r.role, p.postID, p.title, p.create_date
             FROM user u
             LEFT JOIN user_role r ON u.user_roleID = r.user_roleID
             LEFT JOIN post p ON u.userID = p.userID
             WHERE u.userID = :userID";
 $statement = $pdo->prepare($sql);
-$statement->bindParam(':userID', $_GET['user_id'], PDO::PARAM_STR);
+$statement->bindParam(':userID', $userID, PDO::PARAM_STR);
 ?>
 <html lang="en">
 <head>
@@ -69,7 +71,7 @@ if ($statement->execute()) {
                 <table class="table align-middle">
                     <?php
                     $post_statement = $pdo->prepare($sql);
-                    $post_statement->bindParam(':userID', $_GET['user_id'], PDO::PARAM_INT);
+                    $post_statement->bindParam(':userID', $userID, PDO::PARAM_INT);
 
                     if ($post_statement->execute()){
                     //loop through each row of the result set
@@ -86,18 +88,18 @@ if ($statement->execute()) {
                 <h3>My answers</h3>
                 <table class="table align-middle">
                     <?php
-                    $answer_sql = "SELECT p.title, a.postID, a.create_date 
+                    $answer_sql = "SELECT p.title, a.postID AS answer_postID, a.create_date 
                                         FROM answer a
-                                        LEFT JOIN post p ON a.userID = p.userID
+                                        LEFT JOIN post p ON a.postID = p.postID
                                         WHERE a.userID = :userID";
                     $answer_statement = $pdo->prepare($answer_sql);
-                    $answer_statement->bindParam(':userID', $_GET['user_id'], PDO::PARAM_INT);
+                    $answer_statement->bindParam(':userID', $userID, PDO::PARAM_INT);
 
                     //loop through each row of the result set
                     if ($answer_statement->execute()) {
                         while ($row_answer = $answer_statement->fetch(PDO::FETCH_ASSOC)) {?>
                             <tr>
-                                <td width="70%"><a href='post.php?id=<?php echo $row_answer['postID']?>'><?php echo $row_answer['title']?></a></td>
+                                <td width="70%"><a href='post.php?id=<?php echo $row_answer['answer_postID']?>'><?php echo $row_answer['title']?></a></td>
                                 <td align="right"><?php echo $row_answer['create_date']?></td>
                             </tr>
                         <?php }

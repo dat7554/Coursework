@@ -77,7 +77,6 @@ function createUserTable($pdo)
             username VARCHAR(255) NOT NULL,
             password VARCHAR(255) NOT NULL,
             personal_description VARCHAR(1000) NOT NULL,
-            log_in DATETIME NOT NULL,
             register_date DATETIME DEFAULT CURRENT_TIMESTAMP,
             update_date DATETIME ON UPDATE CURRENT_TIMESTAMP,
             FOREIGN KEY (user_roleID) REFERENCES user_role(user_roleID)
