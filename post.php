@@ -135,7 +135,7 @@ if ($_GET['id']) {
                                             </tr>
                                             <tr class="custom">
                                                 <?php if ($answer_row['update_date'] && $answer_row['update_userID'] != null) {
-                                                    echo "<td><a href='profile.php?user_id={$row['update_userID']}'><img src='images/profile/user.jpg' height='55px' alt='user profile image'>".htmlspecialchars($answer_row['update_username'])."</a></td>";
+                                                    echo "<td><a href='profile.php?user_id={$answer_row['update_userID']}'><img src='images/profile/user.jpg' height='55px' alt='user profile image'>".htmlspecialchars($answer_row['update_username'])."</a></td>";
                                                 } else {
                                                     echo "<td></td>";
                                                 } ?>
