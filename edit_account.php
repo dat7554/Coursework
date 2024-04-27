@@ -72,7 +72,9 @@ include('header.php');
                     }
                     ?>
                 </select>
-            <?php }?>
+            <?php } else {
+                $user_roleID = $user['user_roleID'];
+            }?>
         </div>
         <div class="mb-3">
             <label for="inputEmail" class="form-label">Email</label>
@@ -94,7 +96,6 @@ include('header.php');
 <?php //check if the form is submitted to edit the post
 if (isset($_POST['btn_submit'])) {
     //retrieve data from the form
-    $user_roleID = $_POST['user_roleID'];
     $email = $_POST['txt_email'];
     $username = $_POST['txt_username'];
     $personal_description = $_POST['textarea_description'];
