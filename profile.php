@@ -67,14 +67,40 @@ if ($statement->execute()) {
             <div class=" container mb-3">
                 <h3>My posts</h3>
                 <table class="table align-middle">
-                    <?php //loop through each row of the result set
-                    while ($row) {?>
-                        <tr>
-                            <td width="70%"><a href='post.php?id=<?php echo $row['postID']?>'><?php echo $row['title']?></a></td>
-                            <td align="right"><?php echo $row['create_date']?></td>
-                        </tr>
                     <?php
-                        $row = $statement->fetch(PDO::FETCH_ASSOC);
+                    $post_statement = $pdo->prepare($sql);
+                    $post_statement->bindParam(':userID', $_GET['user_id'], PDO::PARAM_INT);
+
+                    if ($post_statement->execute()){
+                    //loop through each row of the result set
+                        while ($row_post = $post_statement->fetch(PDO::FETCH_ASSOC)) {?>
+                            <tr>
+                                <td width="70%"><a href='post.php?id=<?php echo $row_post['postID']?>'><?php echo $row_post['title']?></a></td>
+                                <td align="right"><?php echo $row_post['create_date']?></td>
+                            </tr>
+                        <?php }
+                    } ?>
+                </table>
+            </div>
+            <div class=" container mb-3">
+                <h3>My answers</h3>
+                <table class="table align-middle">
+                    <?php
+                    $answer_sql = "SELECT p.title, a.postID, a.create_date 
+                                        FROM answer a
+                                        LEFT JOIN post p ON a.userID = p.userID
+                                        WHERE a.userID = :userID";
+                    $answer_statement = $pdo->prepare($answer_sql);
+                    $answer_statement->bindParam(':userID', $_GET['user_id'], PDO::PARAM_INT);
+
+                    //loop through each row of the result set
+                    if ($answer_statement->execute()) {
+                        while ($row_answer = $answer_statement->fetch(PDO::FETCH_ASSOC)) {?>
+                            <tr>
+                                <td width="70%"><a href='post.php?id=<?php echo $row_answer['postID']?>'><?php echo $row_answer['title']?></a></td>
+                                <td align="right"><?php echo $row_answer['create_date']?></td>
+                            </tr>
+                        <?php }
                     } ?>
                 </table>
             </div>

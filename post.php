@@ -131,7 +131,7 @@ if ($_GET['id']) {
                                                 } else {
                                                     echo "<td></td>";
                                                 } ?>
-                                                <td>Asked <?php echo $answer_row['create_date']; ?></td>
+                                                <td>Answered <?php echo $answer_row['create_date']; ?></td>
                                             </tr>
                                             <tr class="custom">
                                                 <?php if ($answer_row['update_date'] && $answer_row['update_userID'] != null) {
