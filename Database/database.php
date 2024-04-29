@@ -28,7 +28,8 @@ function createModuleTable($pdo)
             views INT,
             userID INT NOT NULL,
             create_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-            update_date DATETIME ON UPDATE CURRENT_TIMESTAMP
+            update_date DATETIME ON UPDATE CURRENT_TIMESTAMP,
+            FOREIGN KEY (userID) REFERENCES user(userID),
         )";
 
         //execute the SQL statement to create the table
@@ -51,7 +52,6 @@ function createPostTable($pdo)
             title VARCHAR(255) NOT NULL,
             content TEXT(1000) NOT NULL,
             image VARCHAR(255),
-            views INT,
             create_date DATETIME DEFAULT CURRENT_TIMESTAMP,
             update_date DATETIME ON UPDATE CURRENT_TIMESTAMP,
             FOREIGN KEY (userID) REFERENCES user(userID),

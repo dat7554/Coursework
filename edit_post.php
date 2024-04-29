@@ -82,10 +82,12 @@ include('header.php');
             <label for="inputPostContent" class="form-label">Content</label>
             <textarea name='textarea_content' class="form-control" id="inputPostContent" rows="5"><?php echo htmlspecialchars($post['content']);?></textarea>
         </div>
-        <div class="mb-3">
+        <?php if (!empty($post['image'])) { ?>
+            <div class="mb-3">
             <label for="displayImage" class="form-label">Current Image</label>
             <img class="form-control" alt='current image in the post' src='<?php echo $post['image'] ?>' width='50%'>
         </div>
+        <?php } ?>
         <div class="mb-3">
             <label for="formFile" class="form-label">Upload image (<b>.png</b>, <b>.jpeg</b>, <b>.jpg</b>)</label>
             <input class="form-control" name="image" type="file" id="formFile">
